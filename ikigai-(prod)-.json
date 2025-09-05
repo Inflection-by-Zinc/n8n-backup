@@ -1,28 +1,28 @@
 {
-  "createdAt": "2025-08-22T15:52:41.945Z",
-  "updatedAt": "2025-08-27T16:16:41.000Z",
-  "id": "3oVBjTmD0YIEU4CI",
+  "createdAt": "2025-08-28T13:26:09.679Z",
+  "updatedAt": "2025-09-04T11:57:36.000Z",
+  "id": "9ND0cbIjFA6Hz31K",
   "name": "Ikigai (prod)",
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "model": {
           "__rl": true,
-          "value": "claude-3-5-sonnet-20241022",
+          "value": "claude-sonnet-4-20250514",
           "mode": "list",
-          "cachedResultName": "Claude Sonnet 3.5 (New)"
+          "cachedResultName": "Claude Sonnet 4"
         },
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
       "typeVersion": 1.3,
       "position": [
-        -416,
+        224,
         208
       ],
-      "id": "4f59b6cf-72e8-472b-b800-ee6b4f844c6c",
+      "id": "7d07674b-9602-4aff-92c9-75e0c4a87668",
       "name": "Anthropic Chat Model",
       "credentials": {
         "anthropicApi": {
@@ -34,32 +34,32 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.chatInput }}",
+        "text": "={{ $('When Executed by Another Workflow').item.json.chatInput }}",
         "options": {
-          "systemMessage": "=## Role & Objective\nYou are an expert at the Japansese concept of Ikigai. You objective is to guide mid-career professionals to understand possible future career transitions open to them. As a starting point for this you aim to uncover meaningful and well-thought out Ikigai assessments that serve as foundational material for learning about possible transitions.\n\n## Principles\nSome principles of Ikigai that you should always uphold: \n- It’s challenging. Your ikigai should lead to mastery and growth.\n- It’s their choice. You feel a certain degree of autonomy and freedom pursuing your ikigai.\n- It involves a commitment of time and belief, perhaps to a particular cause, skill, trade, or group of people.\n- It boosts their well-being. Ikigai is associated with positive relationships and good health. It gives you more energy than it takes away.\n\n## Stages of Ikigai\nYou should help the users to work through Ikigai in the following order:\n1. *Start with: What they love:* What energises or excites them? What could they lose hours doing?\n2. *Then: What they're good at:* What do people often come to you for help with? What skills have you honed?\n3. *What the world needs:* What problems move them? What issues would they love to see solved?\n4. *What they can be paid for:* What roles, skills, or services have real market demand?\n\n## Instructions\n### Resuming a previous Ikigai\n- When an interaction is first started use the `GetActiveAssessments` tool to see if there are any current Ikigai assessments that need completing. \n- If there are you should ask the user if they wish to continue from where they got to\n- You should also ask if they'd like a summary of the results so far\n- Note the ID of the record retrieved, you will need it later\n\n### Starting a new Ikigai\n- If you did not find ANY in-progress assessments you should ask the user if they wish to start a new assessment. \n- If they do, then use the `CreateNewIkigaiRecord` tool to create the record for it.\n- Note the ID of the record created, you will need this later\n\n### Saving Results\n- When you are ready to save the results use the `UpdateIkigai` tool. The arguments to this are the following:\n\nFIELDS:\n- id (REQUIRED) - The unique identifier for the record to update\n- status (REQUIRED) - Set to 'in-progress' for partially complete assessments or 'complete' when finished\n- ikigai_love (REQUIRED) - What the user loves doing (use empty string \"\" if not yet completed)\n- ikigai_love_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_good_at (REQUIRED) - What the user is good at (use empty string \"\" if not yet completed)\n- ikigai_good_at_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_world_needs (REQUIRED) - What the world needs (use empty string \"\" if not yet completed)\n- ikigai_world_needs_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_paid_for (REQUIRED) - What the user can be paid for (use empty string \"\" if not yet completed)\n- ikigai_paid_for_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n\n- Set id to the value we stored earlier when retrieving or creating the ikigai airtable record. If you can't find the id in your context then use the `GetActiveAssessments` tool to get it. Note: the `GetActiveAssessments` tool does not require any arguments.\n- IMPORTANT: Always include ALL fields listed above when calling the UpdateIkigai tool. For sections not yet completed, use empty strings \"\" for text fields and 0 for clarity scores.\n- If the ikigai is partially complete, ensure Status is set to 'in-progress' when saving.\n- Aim to save results incrementally after each question is completed (i.e., after the \"what you love?\" question has been completed then call the `UpdateIkigai` tool with updated values for that section and default values for uncompleted sections).\n- When updating, preserve any previously saved values for sections that are already completed - do not overwrite them with empty values.\n\n### Posting back to Circle.so\nOnce the Ikigai assessment is completed we encourage users to post back their completed Ikigai to their Circle.so profile. You can do this using the `postIkigaiResultsToCircle` tool. The arguments to this tool are:\n\nREQUIRED FIELDS (strings):\n- ikigai_love\n- ikigai_good_at\n- ikigai_world_needs\n- ikigai_paid_for\n\n## General Guidelines\n- Do NOT tell the user what their ikigai responses are. Rather to act as a guide in helping them discover it for themselves. You may be able to help with abstracting higher-level themes from their answers.\n- Help the user to provide honest, instinctive answers.\n- Ikigai can be an in-depth process that requires introspection, make clear to the user that it is perfectly fine if they want to pause and resume later\n- You should strictly only answer questions related to Ikigai assessments and politely decline to answer anything else.\n- During each question it's expected that you might need to iterate back and fourth with the user until you are happy with their responses. This is part of helping them discover their Ikigai. \n- When you ask follow up questions getting more precise answers, try to limit the number of follow up questions to one at a time. \n- Only move onto the next Ikigai question once you're happy with the current answer."
+          "systemMessage": "=## Role & Objective\nYou are an expert at the Japansese concept of Ikigai. Your objective is to guide mid-career professionals to understand possible future career transitions open to them. As a starting point for this you aim to uncover meaningful and well-thought out Ikigai assessments that serve as foundational material for learning about possible transitions.\n\nYou are a UK citizen and always use British spellings (e.g specialise, not specialize) and expressions (e.g. great, not awesome!).\n\n## Principles\nSome principles of Ikigai that you should always uphold: \n- It’s challenging. Your ikigai should lead to mastery and growth.\n- It’s their choice. You feel a certain degree of autonomy and freedom pursuing your ikigai.\n- It involves a commitment of time and belief, perhaps to a particular cause, skill, trade, or group of people.\n- It boosts their well-being. Ikigai is associated with positive relationships and good health. It gives you more energy than it takes away.\n- You should reflect back what participants have said and highlight themes but you should always ask the participant to draft their own statements, rather than doing it for them.\n\n## Stages of Ikigai\nYou should help the users to work through Ikigai in the following order:\n1. *Start with: What they love:* What energises or excites them? What could they lose hours doing?\n2. *Then: What they're good at:* What do people often come to you for help with? What skills have you honed?\n3. *What the world needs:* What problems move them? What issues would they love to see solved?\n4. *What they can be paid for:* What roles, skills, or services have real market demand?\n\n## Instructions\n### Resuming an in-progress Ikigai\n- If an in-progress assessment exists (indicated by the existance of an <ikigai_context> section below), start by summarising progress and asking if they'd like to continue where they left off.\n\n{{ \n  (function() {\n    if ($json && $json.id) {\n      return `<ikigai_context>\nUser has an in-progress Ikigai assessment with ID: ${$json.id}\nCurrent progress:\n- \"What you love\": ${$json[\"What you love\"] ? $json[\"What you love\"] + \" (Clarity: \" + ($json[\"What you love - Clarity\"] || 0) + \")\" : \"Not yet completed\"}\n- \"What you're good at\": ${$json[\"What you're good at\"] ? $json[\"What you're good at\"] + \" (Clarity: \" + ($json[\"What you're good at - Clarity\"] || 0) + \")\" : \"Not yet completed\"}\n- \"What the world needs\": ${$json[\"What the world needs\"] ? $json[\"What the world needs\"] + \" (Clarity: \" + ($json[\"What the world needs - Clarity\"] || 0) + \")\" : \"Not yet completed\"}\n- \"What you can be paid for\": ${$json[\"What you can be paid for\"] ? $json[\"What you can be paid for\"] + \" (Clarity: \" + ($json[\"What you can be paid for - Clarity\"] || 0) + \")\" : \"Not yet completed\"}\n\nStatus: ${$json.Status || \"in-progress\"}\nInternal ID: ${$json.ID || \"\"}\n\nWhen updating this assessment, always use this ID (${$json.id}) with the UpdateIkigai tool.\n</ikigai_context>`;\n    }\n    return \"\";\n  })()\n}}\n\n###  Creating a new Ikigai\n- If no in-progress Ikigai is found then always ask the user if they'd like to start a new Ikigai. \n- If they say yes then use the `CreateNewIkigaiRecord` tool to create the Airtable record for it\n- Note the id of the ikigai record created, you will need this later\n\n### Saving Results\n- When you are ready to save the results use the `UpdateIkigai` tool. The arguments to this are the following:\n\nFIELDS:\n- id (REQUIRED) - The unique identifier for the record to update\n- status (REQUIRED) - Set to 'in-progress' for partially complete assessments or 'complete' when finished\n- ikigai_love (REQUIRED) - What the user loves doing (use empty string \"\" if not yet completed)\n- ikigai_love_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_good_at (REQUIRED) - What the user is good at (use empty string \"\" if not yet completed)\n- ikigai_good_at_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_world_needs (REQUIRED) - What the world needs (use empty string \"\" if not yet completed)\n- ikigai_world_needs_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n- ikigai_paid_for (REQUIRED) - What the user can be paid for (use empty string \"\" if not yet completed)\n- ikigai_paid_for_clarity (REQUIRED) - Clarity score (use 0 if not yet completed)\n\n- IMPORTANT: Always include ALL fields listed above when calling the UpdateIkigai tool. For sections not yet completed, use empty strings \"\" for text fields and 0 for clarity scores.\n- If the ikigai is partially complete, ensure Status is set to 'in-progress' when saving.\n- Aim to save results incrementally after each question is completed (i.e., after the \"what you love?\" question has been completed then call the `UpdateIkigai` tool with updated values for that section and default values for uncompleted sections).\n- When updating, preserve any previously saved values for sections that are already completed - do not overwrite them with empty values.\n\n### Posting back to Circle.so\nOnce the Ikigai assessment is completed encourage the user to post back their completed Ikigai to their Circle.so profile. You can do this using the `postIkigaiResultsToCircle` tool. The arguments to this tool are:\n\nREQUIRED FIELDS (strings):\n- ikigai_love\n- ikigai_good_at\n- ikigai_world_needs\n- ikigai_paid_for\n\n## General Guidelines\n- Do NOT tell the user what their ikigai responses are. Rather to act as a guide in helping them discover it for themselves. You may be able to help with abstracting higher-level themes from their answers.\n- Help the user to provide honest, instinctive answers.\n- Ikigai can be an in-depth process that requires introspection, make clear to the user that it is perfectly fine if they want to pause and resume later\n- You should strictly only answer questions related to Ikigai assessments and politely decline to answer anything else.\n- During each question it's expected that you might need to iterate back and forth with the user until you are happy with their responses. This is part of helping them discover their Ikigai. \n- When you ask follow up questions getting more precise answers, try to limit the number of follow up questions to one at a time.\n- After each Ikigai question, you should ask the user their clarity on a scale of 1-10 on the answer(s) provided. This will get stored alongside the Ikigai results.\n- Only move onto the next Ikigai question once you're happy with the current answer.\n- Do not mention Airtable to the users. You may mention that you're saving the results but do not mention the technology.\n- Only once all the Ikigai fields are completed should you set Status to completed.\n\n### Message Formatting Guidelines\n- IMPORTANT: Never include empty messages in the conversation history.\n- Always ensure that every message in the messages array has non-empty content.\n- If a message would be empty, either provide a default value or omit the message entirely."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.1,
       "position": [
-        -320,
+        416,
         -16
       ],
-      "id": "630153e9-eb3f-4141-8e99-d5b80da12397",
+      "id": "2b04a044-7fb2-465f-ae73-d82a48cf9970",
       "name": "Ikigai Agent",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "contextWindowLength": 25
+        "contextWindowLength": 30
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -256,
+        352,
         208
       ],
-      "id": "a1784e82-e6ac-4a61-af14-5a828dde8621",
+      "id": "98f6f833-3042-437f-93fb-9861041c3695",
       "name": "Simple Memory"
     },
     {
@@ -85,10 +85,10 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        208,
-        224
+        480,
+        320
       ],
-      "id": "84b73703-e30e-4c62-934c-f1c2501a1cbf",
+      "id": "fe316c5e-537c-4542-80a4-866ffb076e7a",
       "name": "postIkigaiResultsToCircle",
       "credentials": {
         "httpBearerAuth": {
@@ -107,55 +107,8 @@
         -640,
         -16
       ],
-      "id": "032daad9-cde2-4318-854d-d685854eeb03",
+      "id": "e24e8f6a-591c-470e-8d86-ab378d8fe2cd",
       "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "Locate existing Ikigai assessements for the user that are in-progress",
-        "operation": "search",
-        "base": {
-          "__rl": true,
-          "value": "appXOwco115Z6tDUm",
-          "mode": "list",
-          "cachedResultName": "Inflection - AI Co-Pilot",
-          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
-        },
-        "table": {
-          "__rl": true,
-          "value": "tbln2l6WR3RR5Ulbm",
-          "mode": "list",
-          "cachedResultName": "Ikigai",
-          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbln2l6WR3RR5Ulbm"
-        },
-        "filterByFormula": "=AND(\n  {Status} = 'in-progress',\n  {User ID} = {{ $('When Executed by Another Workflow').item.json.airtableUserID }}\n)",
-        "returnAll": false,
-        "limit": 1,
-        "options": {},
-        "sort": {
-          "property": [
-            {
-              "field": "Completion Date",
-              "direction": "desc"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.airtableTool",
-      "typeVersion": 2.1,
-      "position": [
-        -128,
-        304
-      ],
-      "id": "b001beaf-6d86-4cf8-9136-f233a1d8eae5",
-      "name": "GetActiveAssessments",
-      "credentials": {
-        "airtableTokenApi": {
-          "id": "zPz0sGTSd3Ykl4lh",
-          "name": "Airtable Personal Access Token account"
-        }
-      }
     },
     {
       "parameters": {
@@ -177,7 +130,6 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Completion Date": "={{ new Date().toISOString() }}",
             "What you love": "={{ $fromAI('ikigai_love', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
             "What you're good at": "={{ $fromAI('ikigai_good_at', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
             "What the world needs": "={{ $fromAI('ikigai_world_needs', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
@@ -188,7 +140,8 @@
             "What the world needs - Clarity": "={{ $fromAI('ikigai_world_needs_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
             "What you can be paid for - Clarity": "={{ $fromAI('ikigai_paid_for_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
             "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}",
-            "id": "={{ $fromAI('id','The ID of the ikigai record that needs updating') }}"
+            "id": "={{ $fromAI('id','The ID of the ikigai record that needs updating') }}",
+            "Last Modified": "={{ new Date().toISOString() }}"
           },
           "matchingColumns": [
             "id"
@@ -252,8 +205,8 @@
               "removed": false
             },
             {
-              "id": "Completion Date",
-              "displayName": "Completion Date",
+              "id": "Last Modified",
+              "displayName": "Last Modified",
               "required": false,
               "defaultMatch": false,
               "canBeUsedToMatch": true,
@@ -370,10 +323,10 @@
       "type": "n8n-nodes-base.airtableTool",
       "typeVersion": 2.1,
       "position": [
-        176,
-        400
+        608,
+        272
       ],
-      "id": "db6b31df-2ceb-41d3-8ce5-d12702899f0f",
+      "id": "610327b7-f5ee-470d-8a55-85f758c93dc9",
       "name": "UpdateIkigai",
       "credentials": {
         "airtableTokenApi": {
@@ -403,7 +356,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "Status": "in-progress",
-            "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}"
+            "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}",
+            "Last Modified": "={{ new Date().toISOString() }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -455,15 +409,15 @@
               "removed": false
             },
             {
-              "id": "Completion Date",
-              "displayName": "Completion Date",
+              "id": "Last Modified",
+              "displayName": "Last Modified",
               "required": false,
               "defaultMatch": false,
               "canBeUsedToMatch": true,
               "display": true,
               "type": "dateTime",
               "readOnly": false,
-              "removed": true
+              "removed": false
             },
             {
               "id": "User",
@@ -573,10 +527,10 @@
       "type": "n8n-nodes-base.airtableTool",
       "typeVersion": 2.1,
       "position": [
-        32,
-        352
+        736,
+        208
       ],
-      "id": "848c1405-8a43-4791-9eaa-317ed15d1db6",
+      "id": "dea9f48d-491d-413f-8202-4ce6dbe9eb09",
       "name": "CreateNewIkigaiRecord",
       "credentials": {
         "airtableTokenApi": {
@@ -587,17 +541,138 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "console.log('Error details:', $input.item.json.error);\nreturn $input.item;"
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbln2l6WR3RR5Ulbm",
+          "mode": "list",
+          "cachedResultName": "Ikigai",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbln2l6WR3RR5Ulbm"
+        },
+        "filterByFormula": "=AND(   {Status} = 'in-progress',   {User ID} = {{ $('When Executed by Another Workflow').item.json.airtableUserID }} )",
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Last Modified",
+              "direction": "desc"
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
       "position": [
-        272,
-        64
+        -416,
+        -16
       ],
-      "id": "d0843f0d-764a-4b00-a8ba-93e7c1f8de86",
-      "name": "Log Errors"
+      "id": "47692fd3-74eb-4b5f-bf12-1da44e7cf0a9",
+      "name": "Find existing ikigai",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7576059-7e23-4508-b026-c2678739a1bf",
+              "name": "sessionId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "eaa2b75b-fa83-4b92-939b-a3fbfebd16f6",
+              "name": "message_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.sessionId }}_{{ Date.now() }}_assistant",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "2ea1ae7e-fb63-4e74-a28a-2335e0eb70e3",
+      "name": "Add SessionId"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6680a1a8-c40a-4fed-b465-87a4d3b02b91",
+              "name": "message_id",
+              "value": "={{ $('Add SessionId').item.json.message_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a3761f4a-fe6f-4c73-bf1b-7e14fbf72f97",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        -80
+      ],
+      "id": "d9079e65-265f-4ce5-8a7e-1c7bd13c8f87",
+      "name": "Add Message Id"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c86e3f6b-f28a-4eb9-8280-0e9537cc27b8",
+              "name": "output",
+              "value": "\"Hmm, something didn't go as expected. Please retry and if the problem persists please contact the Zinc team\"",
+              "type": "string"
+            },
+            {
+              "id": "6a564034-0c0b-4bbf-991d-8f54bbd8ba8b",
+              "name": "message_id",
+              "value": "={{ $('Add SessionId').item.json.message_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        80
+      ],
+      "id": "4b251540-2de3-43f5-8012-962b0d764432",
+      "name": "Set error message"
     }
   ],
   "connections": {
@@ -614,10 +689,16 @@
     },
     "Ikigai Agent": {
       "main": [
-        [],
         [
           {
-            "node": "Log Errors",
+            "node": "Add Message Id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set error message",
             "type": "main",
             "index": 0
           }
@@ -650,19 +731,8 @@
       "main": [
         [
           {
-            "node": "Ikigai Agent",
+            "node": "Find existing ikigai",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GetActiveAssessments": {
-      "ai_tool": [
-        [
-          {
-            "node": "Ikigai Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -689,6 +759,28 @@
           }
         ]
       ]
+    },
+    "Find existing ikigai": {
+      "main": [
+        [
+          {
+            "node": "Add SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add SessionId": {
+      "main": [
+        [
+          {
+            "node": "Ikigai Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -699,13 +791,6 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {
-    "Ikigai Agent": [
-      {
-        "json": {
-          "output": "Of course, Peter! I'd be happy to help guide you through your Ikigai assessment. This is a thoughtful process of self-discovery, and I'll help you explore each component carefully.\n\nLet's start with the first element: \"What you love\"\n\nCould you tell me about activities or types of work that energize you? Think about times when you've been so absorbed in something that you've lost track of time. What were you doing in those moments?\n\nRemember, there are no wrong answers here - just share what naturally comes to mind."
-        }
-      }
-    ],
     "When Executed by Another Workflow": [
       {
         "json": {
@@ -717,16 +802,68 @@
           "circleId": 42735856
         }
       }
+    ],
+    "Ikigai Agent": [
+      {
+        "json": {
+          "id": "recYwOjpFTM5scBik",
+          "createdTime": "2025-08-21T09:03:08.000Z",
+          "ID": 13,
+          "Status": "in-progress",
+          "Last Modified": "2025-09-01T13:49:37.658Z",
+          "User": [
+            "rec55kS22oQcuwww5"
+          ],
+          "User ID": [
+            13
+          ],
+          "What you love": "Creating impactful solutions collaboratively that have real impact on people",
+          "What you're good at": "Bridging diverse perspectives and combining strategic thinking with practical execution while remaining calm and dependable",
+          "What the world needs": "Better approaches to learning/education that bridge the gap between traditional institutions and startups",
+          "What you can be paid for": "Specialized combination of product leadership in education, delivered through fractional roles, consulting, and teaching",
+          "What you're good at - Clarity": 9,
+          "What you love - Clarity": 9,
+          "What you can be paid for - Clarity": 0,
+          "What the world needs - Clarity": 6,
+          "sessionId": "06038976-68d9-4798-985c-5acb63c6303c",
+          "error": "Bad request - please check your parameters"
+        }
+      }
+    ],
+    "Add SessionId": [
+      {
+        "json": {
+          "id": "rechb6u3lbcSOn7KE",
+          "createdTime": "2025-08-21T09:34:03.000Z",
+          "ID": 15,
+          "Status": "in-progress",
+          "Completion Date": "2025-08-22T15:34:30.427Z",
+          "User": [
+            "recJ6hyQ58EXzEUU9"
+          ],
+          "User ID": [
+            7
+          ],
+          "What you love": "guiding others to understand complex technical concepts while deepening my own mastery",
+          "What you're good at": "trusted advisor for workplace challenges with strong execution skills and ability to translate technical concepts for non-technical audiences",
+          "What the world needs": "helping companies transition to embrace AI enabled technology especially when they're not a typical tech company",
+          "What you're good at - Clarity": 8,
+          "What you love - Clarity": 8,
+          "What you can be paid for - Clarity": 0,
+          "What the world needs - Clarity": 8,
+          "sessionId": "70b237bd-d11e-4d95-b445-9ea1909ac45b"
+        }
+      }
     ]
   },
-  "versionId": "3b13ad1d-0075-44e8-9e78-464f82db4484",
+  "versionId": "8f1a8225-b3b9-4373-be43-0438d8540786",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-08-22T15:52:41.949Z",
-      "updatedAt": "2025-08-22T15:52:41.949Z",
+      "createdAt": "2025-08-28T13:26:09.683Z",
+      "updatedAt": "2025-08-28T13:26:09.683Z",
       "role": "workflow:owner",
-      "workflowId": "3oVBjTmD0YIEU4CI",
+      "workflowId": "9ND0cbIjFA6Hz31K",
       "projectId": "7M5MjjX95kwsCbaT"
     }
   ],
