@@ -1,0 +1,97 @@
+{
+  "createdAt": "2025-08-20T16:58:29.133Z",
+  "updatedAt": "2025-08-21T14:06:26.000Z",
+  "id": "QxN762tCqQbAtOIi",
+  "name": "Energy tracking notifications",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01afbac5-93c3-4961-8887-b8a6af22954f",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.circle.so/api/admin/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "host",
+              "value": "https://inflection-fellowship.zinc.vc"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "12898646-d555-4c38-9b98-4474a0e2ad8b",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "YnWAw0YhhXv0KJ5H",
+          "name": "Circle Admin API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "e6578785-219a-4690-8e54-1a46dcf7e257",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-20T16:58:29.139Z",
+      "updatedAt": "2025-08-20T16:58:29.139Z",
+      "role": "workflow:owner",
+      "workflowId": "QxN762tCqQbAtOIi",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
