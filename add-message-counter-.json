@@ -1,0 +1,46 @@
+{
+  "createdAt": "2025-09-01T08:56:49.979Z",
+  "updatedAt": "2025-09-01T09:27:58.000Z",
+  "id": "C7iqBCcpZyD1BFVk",
+  "name": "Add Message Counter",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "050f33c7-7f8f-4e2e-aaaa-62323c7fcc6e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a38c2e3f-9eba-4f34-b4de-ace63794fb3a",
+      "name": "Webhook",
+      "webhookId": "050f33c7-7f8f-4e2e-aaaa-62323c7fcc6e"
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0cdaae0e-f347-4819-b244-0d0662a98af5",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-09-01T08:56:49.983Z",
+      "updatedAt": "2025-09-01T08:56:49.983Z",
+      "role": "workflow:owner",
+      "workflowId": "C7iqBCcpZyD1BFVk",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
