@@ -1,10 +1,10 @@
 {
-  "createdAt": "2025-08-27T16:14:39.926Z",
-  "updatedAt": "2025-08-28T13:23:46.000Z",
-  "id": "h7IHGn3uZ3q1zd7D",
+  "createdAt": "2025-08-28T13:23:28.900Z",
+  "updatedAt": "2025-08-28T13:23:38.000Z",
+  "id": "lieZMfFfs8TuUxdy",
   "name": "Inflection MVP (prod) backup",
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
@@ -12,17 +12,83 @@
         "options": {
           "responseMode": "responseNode"
         },
-        "path": "58c01615-4d7e-4b3c-b554-423068b4e1a2"
+        "path": "3252f488-9893-4731-8bb8-4adbbb8ad097"
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -544,
-        432
+        -688,
+        1552
       ],
-      "id": "aa439cb4-34d3-4367-be0f-5cacd6be9238",
+      "id": "7c454b80-0ba4-4632-a14e-bc2348825be2",
       "name": "When chat message received",
-      "webhookId": "58c01615-4d7e-4b3c-b554-423068b4e1a2"
+      "webhookId": "3252f488-9893-4731-8bb8-4adbbb8ad097"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('When chat message received').item.json.metadata.selectedOption }}",
+                    "rightValue": "ikigai",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5986ad2c-c07f-4ca4-97bd-68ceb9a6e6da"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ikigai"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "efadc2b3-f3e9-43c9-9250-d7f64afc7c67",
+                    "leftValue": "={{ $('When chat message received').item.json.metadata.selectedOption }}",
+                    "rightValue": "energy",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "energy"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        1632
+      ],
+      "id": "271003ec-736c-4872-a4e0-f3b3762df8b4",
+      "name": "Switch"
     },
     {
       "parameters": {
@@ -66,11 +132,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -96,
-        432
+        -240,
+        1552
       ],
-      "id": "61cceb37-e693-42fb-8b7d-3c74c5efd32a",
-      "name": "Check email exists in circle community",
+      "id": "9e2d466f-38f3-4472-86a9-268bfe038207",
+      "name": "Check email exists in circle community1",
       "credentials": {
         "httpBearerAuth": {
           "id": "3nDi1sFvxbgHLY86",
@@ -127,11 +193,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        128,
-        432
+        -16,
+        1552
       ],
-      "id": "e2df920e-d368-4fb8-af67-195e28522e91",
-      "name": "If user found in circle"
+      "id": "bfe8cd87-e485-4485-858c-3cd65e09bb2b",
+      "name": "If user found in circle1"
     },
     {
       "parameters": {
@@ -143,11 +209,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        352,
-        336
+        208,
+        1456
       ],
-      "id": "77841646-9d24-499a-a47f-7d26fe1436d4",
-      "name": "Get User's Profile",
+      "id": "1455f14e-7d09-4d34-a6f7-072b5eeb9b95",
+      "name": "Get User's Profile1",
       "credentials": {
         "httpBearerAuth": {
           "id": "YnWAw0YhhXv0KJ5H",
@@ -173,11 +239,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        352,
-        528
+        208,
+        1648
       ],
-      "id": "b9857a56-2b08-4b39-8271-740ae02804d3",
-      "name": "Tell user they're not authenticated and block chat"
+      "id": "ec55f4e4-a70e-42ef-b869-ba6e6c0ee91a",
+      "name": "Tell user they're not authenticated and block chat1"
     },
     {
       "parameters": {
@@ -217,16 +283,16 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        576,
-        336
+        432,
+        1456
       ],
-      "id": "1ae540c7-0624-4a37-8e5a-bd5411c0d64a",
-      "name": "If __INIT__ method"
+      "id": "fd284125-5717-4ad9-8649-9eec55e53c16",
+      "name": "If __INIT__ method1"
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "=[{\n    \"output\": \"Hi {{ $('Get User\\'s Profile').item.json.name }}! 👋 Welcome back to your ikigai journey. I'm here to help you discover your purpose. Would you like to continue your assessment or explore your previous insights?\"\n}]",
+        "responseBody": "=[{\n    \"output\": \"Hi {{ $('Get User\\'s Profile').item.json.name }}! 👋 Welcome back to Inflection. How can I help you today?\"\n}]",
         "options": {
           "responseHeaders": {
             "entries": [
@@ -241,11 +307,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1472,
-        240
+        1328,
+        1264
       ],
-      "id": "23f39ee6-8715-4e0b-a3a2-5d1ee6e29c24",
-      "name": "Send personalised welcome"
+      "id": "fff2809b-2b90-44f5-b790-716f6ce1c2df",
+      "name": "Send personalised welcome1"
     },
     {
       "parameters": {
@@ -275,11 +341,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1024,
-        240
+        880,
+        1264
       ],
-      "id": "48da96bf-f572-4dd8-aeae-636d11f5fd24",
-      "name": "If Airtable user record exists"
+      "id": "4f130a9c-1b79-4db4-8744-147f94953de4",
+      "name": "If Airtable user record exists1"
     },
     {
       "parameters": {
@@ -371,11 +437,11 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1248,
-        320
+        1104,
+        1344
       ],
-      "id": "f5114e9b-3963-420e-a398-5133b9d912c7",
-      "name": "Create User record",
+      "id": "35ca91db-83e9-4c0b-afa6-2171bf581c14",
+      "name": "Create User record1",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
@@ -406,11 +472,11 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        800,
-        240
+        656,
+        1264
       ],
-      "id": "51e041a5-95a8-4a38-99f6-baea1b41fcb0",
-      "name": "Search airtable user records",
+      "id": "a536e75b-2d20-4c00-8142-1e0fb68ab7ad",
+      "name": "Search airtable user records1",
       "alwaysOutputData": true,
       "credentials": {
         "airtableTokenApi": {
@@ -422,17 +488,17 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"sessionId\": \"{{ $('When chat message received').item.json.sessionId }}\",\n  \"airtableUser\": \"{{ $json.id }}\",\n  \"airtableUserID\": {{ $json.Id }},\n  \"Completed Onboarding\": \"{{ $json['Completed Onboarding'] || false }}\",\n  \"chatInput\": \"{{ $('Sanitise User Input').item.json.message }}\",\n  \"circleId\": {{ $json[\"Circle ID\"] }}\n}\n",
+        "jsonOutput": "={\n  \"sessionId\": \"{{ $('When chat message received').item.json.sessionId }}\",\n  \"airtableUser\": \"{{ $json.id }}\",\n  \"airtableUserID\": {{ $json.Id }},\n  \"Completed Onboarding\": \"{{ $json['Completed Onboarding'] || false }}\",\n  \"chatInput\": \"{{ $('Sanitise User Input1').item.json.message }}\",\n  \"circleId\": {{ $json[\"Circle ID\"] }}\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1024,
-        512
+        880,
+        1632
       ],
-      "id": "3797c5b7-f8a1-4c98-97f1-b0773e0f5b38",
-      "name": "Add sessionId"
+      "id": "558ac302-0728-448c-87eb-3eb6bf141938",
+      "name": "Add sessionId1"
     },
     {
       "parameters": {
@@ -457,44 +523,17 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        800,
-        512
+        656,
+        1632
       ],
-      "id": "2799ae69-a0c7-4cad-801f-939240a9ba25",
-      "name": "Get user record",
+      "id": "65451772-cd5a-4cde-a2d3-8aff6d0f5291",
+      "name": "Get user record1",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
           "name": "Airtable Personal Access Token account"
         }
       }
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "3oVBjTmD0YIEU4CI",
-          "mode": "list",
-          "cachedResultName": "Inflection — Ikigai (prod)"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        1248,
-        512
-      ],
-      "id": "1430db63-ce8d-495d-8728-42e4f915b6e7",
-      "name": "Execute Ikigai Workflow"
     },
     {
       "parameters": {
@@ -516,10 +555,10 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "conversation_id": "={{ $('Add sessionId').item.json.sessionId }}",
-            "content": "={{ $('Respond to User').item.json.output }}",
+            "conversation_id": "={{ $('Add sessionId1').item.json.sessionId }}",
+            "content": "={{ $('Respond to User1').item.json.output }}",
             "ts": "={{ new Date().toISOString() }}",
-            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "User": "={{ [$('Add sessionId1').item.json.airtableUser] }}",
             "role": "assistant"
           },
           "matchingColumns": [],
@@ -602,11 +641,11 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1920,
-        512
+        2000,
+        1632
       ],
-      "id": "2cfad891-c7da-4db9-991e-0693bfd06f5a",
-      "name": "Save Agent Output Trace",
+      "id": "5d846894-1c56-4bab-8e6f-b61470484448",
+      "name": "Save Agent Output Trace1",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
@@ -637,7 +676,7 @@
             "conversation_id": "={{ $('When chat message received').item.json.sessionId }}",
             "content": "={{ $('When chat message received').item.json.chatInput }}",
             "ts": "={{ new Date().toISOString() }}",
-            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "User": "={{ [$('Add sessionId1').item.json.airtableUser] }}",
             "role": "user"
           },
           "matchingColumns": [],
@@ -720,11 +759,11 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1696,
-        512
+        1776,
+        1632
       ],
-      "id": "ecf499b6-9db0-4841-bbc9-a5ce78e40403",
-      "name": "Save User Input Trace",
+      "id": "d76f4f94-8a3f-4eab-8f1f-732bee936116",
+      "name": "Save User Input Trace1",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
@@ -741,11 +780,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1472,
-        512
+        1552,
+        1632
       ],
-      "id": "ef88f94a-2f02-4fbc-9122-9ac327843c5b",
-      "name": "Respond to User"
+      "id": "ee4018e3-9d2f-4711-9914-efba4739e0d1",
+      "name": "Respond to User1"
     },
     {
       "parameters": {
@@ -754,11 +793,65 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -320,
-        432
+        -464,
+        1552
       ],
-      "id": "c950cc55-64f9-4c18-8922-ccb145cc3803",
-      "name": "Sanitise User Input"
+      "id": "c9c129a7-b864-413b-964a-40c2a788f165",
+      "name": "Sanitise User Input1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "mwFk9NiB1UEYtwWF",
+          "mode": "list",
+          "cachedResultName": "Inflection — Ikigai (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        1536
+      ],
+      "id": "a9e95097-7cd0-4636-95a3-17e16020f444",
+      "name": "Execute Ikigai Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9U86dDzLOBvryuVU",
+          "mode": "list",
+          "cachedResultName": "Inflection — Energy Tracking (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        1728
+      ],
+      "id": "372b3262-6e01-4af6-8bdc-97315548573d",
+      "name": "Execute Energy Tracking Workflow"
     }
   ],
   "connections": {
@@ -766,112 +859,14 @@
       "main": [
         [
           {
-            "node": "Sanitise User Input",
+            "node": "Sanitise User Input1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check email exists in circle community": {
-      "main": [
-        [
-          {
-            "node": "If user found in circle",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If user found in circle": {
-      "main": [
-        [
-          {
-            "node": "Get User's Profile",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Tell user they're not authenticated and block chat",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get User's Profile": {
-      "main": [
-        [
-          {
-            "node": "If __INIT__ method",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If __INIT__ method": {
-      "main": [
-        [
-          {
-            "node": "Search airtable user records",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get user record",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If Airtable user record exists": {
-      "main": [
-        [
-          {
-            "node": "Send personalised welcome",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Create User record",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create User record": {
-      "main": [
-        [
-          {
-            "node": "Send personalised welcome",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Search airtable user records": {
-      "main": [
-        [
-          {
-            "node": "If Airtable user record exists",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Add sessionId": {
+    "Switch": {
       "main": [
         [
           {
@@ -879,14 +874,163 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Execute Energy Tracking Workflow",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
-    "Get user record": {
+    "Check email exists in circle community1": {
       "main": [
         [
           {
-            "node": "Add sessionId",
+            "node": "If user found in circle1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If user found in circle1": {
+      "main": [
+        [
+          {
+            "node": "Get User's Profile1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tell user they're not authenticated and block chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User's Profile1": {
+      "main": [
+        [
+          {
+            "node": "If __INIT__ method1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If __INIT__ method1": {
+      "main": [
+        [
+          {
+            "node": "Search airtable user records1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get user record1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Airtable user record exists1": {
+      "main": [
+        [
+          {
+            "node": "Send personalised welcome1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create User record1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User record1": {
+      "main": [
+        [
+          {
+            "node": "Send personalised welcome1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search airtable user records1": {
+      "main": [
+        [
+          {
+            "node": "If Airtable user record exists1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add sessionId1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user record1": {
+      "main": [
+        [
+          {
+            "node": "Add sessionId1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save User Input Trace1": {
+      "main": [
+        [
+          {
+            "node": "Save Agent Output Trace1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to User1": {
+      "main": [
+        [
+          {
+            "node": "Save User Input Trace1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitise User Input1": {
+      "main": [
+        [
+          {
+            "node": "Check email exists in circle community1",
             "type": "main",
             "index": 0
           }
@@ -897,40 +1041,18 @@
       "main": [
         [
           {
-            "node": "Respond to User",
+            "node": "Respond to User1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Save User Input Trace": {
+    "Execute Energy Tracking Workflow": {
       "main": [
         [
           {
-            "node": "Save Agent Output Trace",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respond to User": {
-      "main": [
-        [
-          {
-            "node": "Save User Input Trace",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Sanitise User Input": {
-      "main": [
-        [
-          {
-            "node": "Check email exists in circle community",
+            "node": "Respond to User1",
             "type": "main",
             "index": 0
           }
@@ -946,7 +1068,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {
-    "Get User's Profile": [
+    "Get User's Profile1": [
       {
         "json": {
           "first_name": "Matt",
@@ -1644,7 +1766,7 @@
         }
       }
     ],
-    "Search airtable user records": [
+    "Search airtable user records1": [
       {
         "json": {
           "id": "recqqMCwicCuZzVxS",
@@ -1656,7 +1778,7 @@
         }
       }
     ],
-    "Add sessionId": [
+    "Add sessionId1": [
       {
         "json": {
           "sessionId": "5f0460f3-c38b-4853-92d2-24771a5a56e0",
@@ -1665,7 +1787,7 @@
         }
       }
     ],
-    "Get user record": [
+    "Get user record1": [
       {
         "json": {
           "id": "recJ6hyQ58EXzEUU9",
@@ -1677,14 +1799,14 @@
         }
       }
     ],
-    "Respond to User": [
+    "Respond to User1": [
       {
         "json": {
           "output": "Hello! I'm here to help guide you through an Ikigai assessment, which can help uncover meaningful career directions aligned with your purpose. Ikigai is a Japanese concept that sits at the intersection of what you love, what you're good at, what the world needs, and what you can be paid for.\n\nWould you like to begin exploring your Ikigai? We'll start with the first component: \"What you love.\" \n\nSome questions to consider:\n- What activities energize you or make you lose track of time?\n- What topics or activities do you find yourself naturally drawn to?\n- What would you do even if you weren't paid for it?\n\nTake your time to reflect - there's no rush, and we can pause at any point if you need more time to think.\n\nWhat comes to mind when you think about what you truly love doing?"
         }
       }
     ],
-    "Sanitise User Input": [
+    "Sanitise User Input1": [
       {
         "json": {
           "message": "hey",
@@ -1702,14 +1824,14 @@
       }
     ]
   },
-  "versionId": "45618665-b7d6-41c4-8778-d08bcfc1484b",
+  "versionId": "c4687506-28e0-40d0-a990-5045b0b1d620",
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-08-27T16:14:39.931Z",
-      "updatedAt": "2025-08-27T16:14:39.931Z",
+      "createdAt": "2025-08-28T13:23:28.904Z",
+      "updatedAt": "2025-08-28T13:23:28.904Z",
       "role": "workflow:owner",
-      "workflowId": "h7IHGn3uZ3q1zd7D",
+      "workflowId": "lieZMfFfs8TuUxdy",
       "projectId": "7M5MjjX95kwsCbaT"
     }
   ],
