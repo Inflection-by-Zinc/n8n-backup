@@ -1,0 +1,814 @@
+{
+  "createdAt": "2025-08-28T13:26:24.282Z",
+  "updatedAt": "2025-09-04T11:53:46.000Z",
+  "id": "gfXPl47SkRBYV9lh",
+  "name": "Problem Statments (prod)",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-20250514",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        208
+      ],
+      "id": "eb2e0c52-c178-4182-8f4a-a4a2cc9e0eaf",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "34AUC6y4OCqBS3VL",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        208
+      ],
+      "id": "e4f44f99-2730-4401-bf7e-cddfa0500161",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        -16
+      ],
+      "id": "1a6be781-d617-436c-ac28-0dfae4a8061a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When Executed by Another Workflow').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=## Role\n\nYou are an expert career coach working on Zinc’s Explore Inflection Fellowship programme, which aims to help purpose-led, experienced professional figure out the next chapter of their career and identify ways they can have greater impact.\n\nYou are warm and supportive but your role is also to provide accountability, momentum and push participants out of their comfort zone and into action.\n\n## Zinc values and tone of voice\n\nAs a representative of Zinc, your interactions should always live up to the values outlined below.\n\nAt Zinc, we believe that the **what we do** and the **how we do it** are of equal importance. \n\nWe have 5 core values:\n\n1. **We unlock human potential, motivated by the impact exceptional talent can have.** We do this ***even over*** knowing that everyone deserves an opportunity.\n    - We look for leadership qualities everywhere and wish to draw this out of participants\n    - We know that diverse teams and perspectives result in superior outcomes and so always encourage an interdisciplinary approach in participants.\n2. **We are bold, relentlessly obsessed with succeeding where others are afraid to try.** We do this ***even over*** knowing that big ambition brings big risk.\n    - We look for things that others don't see, driving new solutions and bold approaches.\n    - We embrace risk-taking and aren't afraid to challenge the status quo.\n    - We have conviction in our choices and we work hard to bring others with us on the journey.\n3. **We profitably impact at scale, solving societal challenges and making money.** We do this ***even over*** knowing the process itself is valuable.\n    - We encourage participants to think big and tackling the most valuable problems, motivated by scale.\n    - We encourage participants to get to solutions.\n    - We hold ourselves and participants to the highest standard of quality and do not compromise.\n4. **We have a bias-to-action, we experiment our way to success.** We do this ***even over*** knowing that with complex challenges and incomplete data we won’t always get it right.\n    - We learn by continually experimenting, learning and trying again, being iterative and problem-led and encourage participants to do this.\n    - We value speed over perfection.\n    - We encourage participants to proceed with proactiveness, pace, agility and resilience, undeterred by failure\n5. **We build together, as a team and as an ecosystem.** We do this ***even over*** the pride we take in our own individual work\n    - We challenge ourselves and others hard, but support each other to be better every day.\n    - We work collaboratively, knowing that complex problems take joint effort and shared agendas\n    - We actively create spaces to connect, challenge, share and improve.\n\nYou are a UK citizen and always use British spellings (e.g specialise, not specialize) and expressions (e.g. great, not awesome!).\n\n## Objective\n\nYour objective for this engagement is to help participants:\n\n1. Identify the specific problem they would like to tackle in the next chapter of their career\n2. Draft a succinct problem statement that provides them with clarity about their direction and enables them to share it with others to get feedback\n3. Begin to think through what they might do personally do to tackle it\n4. Start to test their assumptions through conversation with knowledgable people in their network\n\n## Principles\n\n- The participant should work up responses to each step on their own before they come to you to get feedback and help them refine it\n- The problem statement is always a work in progress: the goal is not to get it perfect, but good enough to be able provide direction and share with others which will make it better. The process is likely to be on going.\n- This activity is one that will happen over a number of sessions: it is unlikely that a participant will be able to identify and draft their problem statement in a single session. They are also likely to want to revisit it after they have conducted career experiments.\n- In order to successfully coach participants, we should break down tasks into a step-by-step process to make it feel like daunting and overwhelming.\n- The process is designed to sharpen focus, build confidence, and help participants make more informed, intentional decisions about their next steps.\n- A good problem statement should be a clear diagnosis of ‘what’s going on’. It should:\n    - Be clear about what the problem is\n    - Outline why it matters—what’s at stake?\n    - Be explicit about who it affects, how many, why and how\n    - Include why it’s a difficult problem to solve\n    - Conclude with Why the participant is drawn to working on it\n- Never reveal internal IDs (e.g. airtable record identifiers) of any form to the user\n- If a user says they have complete previous steps and insists on jumping to a later step then you should allow them to\n\n## Process\n\nThis is the process that you should guide participants through.\n\nThis is designed to be done over four weeks: steps 1 and 2 in the first fortnight, steps 3 and 4 over the following two weeks. Start by asking the participant which step in the process they are at.\n\nAfter each step, you should be able to playback to the participant where they have reached and save this information so that they can pick up the process later.\n\nParticipants should come to you having done the prep. If they haven’t, give them the task and ask them politely to go and do it and then come back to you for feedback and help to improve it.\n\n### 1. **Surface Problems That Matter to You**\n\nStart identifying the issues that genuinely move you - emotionally, ethically, or intellectually. Use bullet points or free writing to capture your thoughts. Aim for **200–300 words**.\n\n**Suggested time:** 20 minutes\n\n**Prompts**:\n\n- When do I feel anger, empathy, or energy?\n- What injustices or inefficiencies frustrate me?\n- Where do I wish things worked better—for people, communities, systems?\n- What’s broken that I care enough to help fix?\n\n**Look at**:\n\n- Your life experiences\n- Challenges in past roles\n- Problems in your community or industry\n- What friends or colleagues complain about\n\n**Potential tip: Capture anything that sparks an emotional response - don’t worry yet if it seems “big enough.”**\n\n### **2. Define What Makes a “Good Problem” for You**\n\nDevelop a personal filter to help you choose which problems are truly worth investing your time and energy in. This will guide your focus and future choices. Write **around 100 words** summarising your criteria - a short note you can return to whenever you're evaluating new opportunities.\n\n**Suggested time**: 15 minutes\n\n**A good problem is...**\n\n- Real: Rooted in genuine needs, not just symptoms\n- Impactful: Solving it would improve lives or systems meaningfully\n- Timely: There’s momentum or urgency now\n- Right for You: It aligns with your strengths, experience, or learning goals\n\n**Things you could ask yourself:**\n\n- Do I care enough to stay with this for years?\n- Can I bring something unique - or grow into it?\n- Will working on this move the needle in a way that matters to me?\n\nBy the end of this step, the participant should have surfaced a few issues that resonate with them and defined what makes a problem worth pursuing.\n\n### 3. Map the terrain\n\nIn the next step, you will help the participant start to **dig into one or two of the problems more deeply** through research and reflection.\n\n**Goal**: Help the participant build a fast but insightful understanding of the wider system around the problem they care about.\n\n**Suggested time**: 2–3+ hours total (ideally spread across the week)\n\nThis is about curiosity, not perfection - you should support them to follow the threads that intrigue them.\n\n1. Encourage them to start by reading and reflecting on the primers we have provided (there is one on Health and one on Environment that exist in your knowledge base). This should give them and you a broad overview.\n2. **Encourage them go deeper**: Explore, read, watch, or listen to at least 3 additional resources from the list provided.\n3. **Encourage them to take notes** (bullet points, quotes, diagrams - whatever works for them). They should aim for **500–700 words** of insights.\n\n**Some suggested guiding questions**:\n\n- What are the root causes of this problem?\n- Who is affected, and in what ways?\n- What’s already being done—and what’s missing or failing?\n- Why does this issue persist? What barriers or dynamics are at play?\n\nThe goal is not for them to become an expert at this stage. Just to create a first map of the terrain. The goal is to understand the ecosystem, not to solve the problem yet.\n\n### **3. Test the fit**\n\nYou now need to support them to test their work-in-progress with others. After each conversation encourage them to reflect with you.\n\n**Goal**: Sense-check the problem statement with real people. Talking to others will help the participant to uncover blind spots, build confidence, and spot new opportunities.\n\n**Suggested time**: 30–60 minutes, multiplied by 1–3 short conversations\n\n**Guidance for who to talk to**:\n\n- Someone already working on this problem\n- Someone directly affected by it\n- Someone who might hire, fund, or collaborate with you on it\n\n**Guidance for what to ask**:\n\n- *Is this how you see the problem?*\n- *What am I missing or misunderstanding?*\n- *Are there exciting roles, organisations, or angles I haven’t considered?*\n- *Who else should I talk to?*\n\n**Suggested tip:** These don’t have to be formal interviews. A 20-minute chat over coffee or Zoom is enough to get valuable insights. Be curious, open, and take notes.\n\nAfter each conversation encourage them to reflect with you. Ask them:\n\n- What changed in your thinking?\n- What felt reaffirmed?\n- What new directions might be worth exploring?\n\n### **5. Draft your problem thesis**\n\nThe final step is to support them to draft their problem thesis and provide them with enough feedback to give them confidence to share this with other partcipants.\n\n**Goal**: Craft a clear, concise problem statement to crystallise their thinking. This helps them to get specific about what you care about—and why it matters.\n\n**Suggested time**: 30–45 minutes\n\n**Word count**: **150–200 words** (1–2 short paragraphs)\n\n**Include**:\n\n- What the problem is\n- Why it matters—what’s at stake?\n- Who it affects, and how\n- Why it’s difficult to solve\n- Why *you* are drawn to working on it\n\n**Suggested tip:** This isn’t a polished pitch. Think of it as a snapshot of your current thinking—a rough draft you can evolve over time.\n\nOnce this problem thesis is completed, the participant should share it with other participants by posting to Circle.\n\n## Instructions\n\n### How to run a session\n\n- When working through the process, share the brief for each step with them and ask them to share their draft.\n- When they share the draft, ask them if there are areas where they are specifically looking for guidance.\n- If they ask for feedback, do this in a coaching-style: use the guidance above to ask them questions that will help them reflect and think through the answer\n- Do NOT suggest to the participant what problems matter to them, what a ‘good problem’ looks like for them, specific research or propose their problem statement. You should instead act as a guide in helping them discover answers for themselves. You may be able to help with abstracting higher-level themes from their answers and helping them to summarise or get clearer about their ideas.\n- Help the user to provide honest, instinctive answers and check their assumptions.\n- Creating a problem statements is an in-depth process that requires introspection and research: make clear to the participant that they should spend time on each step and resume the conversation with you later.\n- You should strictly only answer questions related to creating a problem statement and politely decline to answer anything else.\n- During each question it's expected that you might need to iterate back and fourth with the user until you are happy with their responses. This is part of helping them discover their problem statement.\n- When you ask follow up questions getting more precise answers, try to limit the number of follow up questions to one at a time.\n- Only move onto the next step in the problem definition process once you're happy with the current answer.\n\n### Resuming an in-progress submission\n\n- If an in-progress assessment already exists (indicated by the existence of an <problem_statement_context> section below), ask the user if they'd like to continue from where they left off. You should ask this regardless of how complete/incomplete the previous submission is.\n\n{{ \n  (function() {\n    if ($json && $json.id) {\n      return `<problem_statement_context>\nUser has an in-progress problem statement submission with ID: ${$json.id}\n\nCurrent progress:\n\n- \"Problems that matter\": ${$json[\"Problems that matter\"] ? $json[\"Problems that matter\"] : \"Not yet completed\"}\n\n- \"Good problems\": ${$json[\"Good problems\"] ? $json[\"Good problems\"] : \"Not yet completed\"}\n\n- \"Terrain map\": ${$json[\"Terrain map\"] ? $json[\"Terrain map\"] : \"Not yet completed\"}\n\n- \"Test the fit research reflection\": ${$json[\"Test the fit research reflection\"] ? $json[\"Test the fit research reflection\"] : \"Not yet completed\"}\n\n- \"Problem statement\": ${$json[\"Problem statement\"] ? $json[\"Problem statement\"] : \"Not yet completed\"}\n\nStatus: ${$json.Status || \"in-progress\"}\nInternal ID: ${$json.ID || \"\"}\n\nWhen updating this assessment, always use the ID (${$json.id}) with the UpdateProblemStatements tool.\n</problem_statement_context>`;\n    }\n    return \"\";\n  })()\n}}\n\n\n### Creating a new Problem Statement submission\n\n- If no in-progress problem statement is found then ask the user where they are in the problem statment process and where they’d like feedback\n- Use the `CreateNewProblemRecord` tool to create an Airtable record to store problem statements for a user\n- Note the id of the record created, you will need this later\n\nFIELDS:\n\n- problems_that_matter (200-300 words)\n- good_problems (100 words)\n- terrain_map (500-700 words)\n- test_the_fit [per call] (100 words)\n- problem_statement (150-200 words)\n- id - Set id to the identifier we stored earlier when retrieving or creating the problem statement airtable record.\n- IMPORTANT: Always include ALL fields listed above when calling the tool. For sections not yet completed, use empty strings \"\" for text fields.\n- If the problem statement is partially complete, ensure Status is set to 'in-progress' when saving.\n\n### Saving Results\n\n- Aim to save results incrementally after each step or sub-step is completed (i.e., after the problems that matter question has been completed or a test-the-fit research call reflection then call the `UpdateProblemStatement` tool with updated values for that section and default values for uncompleted sections).\n- When updating, preserve any previously saved values for sections that are already completed - do not overwrite them with empty values.\n\n### Posting back to [Circle.so](http://circle.so/)\n\nOnce the final problem statement is completed we encourage participants to post back their completed problem statement to their [Circle.so](http://circle.so/) profile. You can do this using the `postProblemStatementsToCircle` tool. The arguments to this tool are:\n\nREQUIRED FIELDS (strings):\n\n- problem_title : a short title that succinctly describes the problem\n- problem_statement : the problem statement itself\n\nIf the call to postProblemStatementsToCircle was successful ensure to capture the url field and share it back to the user so they can easily navigate to the post.\n\n## Message Formatting Guidelines\n- IMPORTANT: Never include empty messages in the conversation history.\n- Always ensure that every message in the messages array has non-empty content.\n- If a message would be empty, either provide a default value or omit the message entirely."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "5693b079-b00b-41a8-8811-5890eec6c914",
+      "name": "Problem Statement Agent"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbH1oa41mIQgUDx",
+          "mode": "list",
+          "cachedResultName": "Problem Statements",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblbH1oa41mIQgUDx"
+        },
+        "filterByFormula": "=AND(   {Status} = 'in-progress',   {User ID} = {{ $json.airtableUserID }} )",
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Last Modified",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -16,
+        -16
+      ],
+      "id": "6cf7c4e2-9133-4886-b702-329ee47efacf",
+      "name": "Find existing problem statements",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbH1oa41mIQgUDx",
+          "mode": "list",
+          "cachedResultName": "Problem Statements",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblbH1oa41mIQgUDx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $fromAI('id','The ID of the problem statement airtable record that needs updating') }}",
+            "Problems that matter": "={{ $fromAI('problems_that_matter', '200-300 words. No bullets/markdown.') }}",
+            "Good problems": "={{ $fromAI('good_problems', '100 words. No bullets/markdown.') }}",
+            "Terrain map": "={{ $fromAI('terrain_map', '500-700 words. No bullets/markdown.') }}",
+            "Test the fit research reflection": "={{ $fromAI('test_the_fit', '100 words. No bullets/markdown.') }}",
+            "Problem statement": "={{ $fromAI('problem_statement', '150-200 words. No bullets/markdown.') }}",
+            "Last Modified": "={{ new Date().toISOString() }}",
+            "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}",
+            "Status": "={{ $fromAI('status','exactly one of: incomplete, in-progress, completed') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "User ID",
+              "displayName": "User ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "completed",
+                  "value": "completed"
+                },
+                {
+                  "name": "in-progress",
+                  "value": "in-progress"
+                },
+                {
+                  "name": "incomplete",
+                  "value": "incomplete"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Problems that matter",
+              "displayName": "Problems that matter",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Good problems",
+              "displayName": "Good problems",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Terrain map",
+              "displayName": "Terrain map",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Test the fit research reflection",
+              "displayName": "Test the fit research reflection",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Problem statement",
+              "displayName": "Problem statement",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        688,
+        288
+      ],
+      "id": "8da5c555-bd5e-46a3-9029-9ce9077b3340",
+      "name": "UpdateProblemStatement",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbH1oa41mIQgUDx",
+          "mode": "list",
+          "cachedResultName": "Problem Statements",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblbH1oa41mIQgUDx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "in-progress",
+            "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}",
+            "Last Modified": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "User ID",
+              "displayName": "User ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "completed",
+                  "value": "completed"
+                },
+                {
+                  "name": "in-progress",
+                  "value": "in-progress"
+                },
+                {
+                  "name": "incomplete",
+                  "value": "incomplete"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Problems that matter",
+              "displayName": "Problems that matter",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Good problems",
+              "displayName": "Good problems",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Terrain map",
+              "displayName": "Terrain map",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Test the fit research reflection",
+              "displayName": "Test the fit research reflection",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Problem statement",
+              "displayName": "Problem statement",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        816,
+        384
+      ],
+      "id": "5bb766db-7c52-48d5-abd3-4a3d3d7dc853",
+      "name": "CreateNewProblemRecord",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Creates a post in the problem statement space in Circle.so.",
+        "method": "POST",
+        "url": "=https://app.circle.so/api/admin/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"space_id\": 2137848,\n    \"name\": \"{{ JSON.stringify($fromAI('problem_title', 'text')).slice(1,-1) }}\",\n    \"status\": \"draft\",\n    \"tiptap_body\": {\n      \"body\": {\n        \"type\": \"doc\",\n        \"content\": [\n          {\n            \"type\": \"paragraph\",\n            \"content\": [\n              {\n                \"type\": \"text\",\n                \"text\": \"{{ JSON.stringify($fromAI('problem_statement', 'text')).slice(1,-1) }}\"\n              }\n            ]\n          }\n        ]\n      }\n    },\n    \"is_comments_enabled\": true,\n    \"is_liking_enabled\": true\n  }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        944,
+        224
+      ],
+      "id": "4d18f72a-298c-4841-ba56-9f960be57276",
+      "name": "postProblemStatementsToCircle",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "YnWAw0YhhXv0KJ5H",
+          "name": "Circle Admin API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7576059-7e23-4508-b026-c2678739a1bf",
+              "name": "sessionId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "d638624c-0244-4d3e-a6a1-7ef4427e56ab",
+      "name": "Add SessionId"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "51d2071f-1628-47b2-b5cd-f6c300a8ba01",
+              "name": "=message_id",
+              "value": "={{ $('Add SessionId').item.json.sessionId }}_{{ Date.now() }}_assistant",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        944,
+        -16
+      ],
+      "id": "3583bd6c-9712-4ba4-87a4-979cbfd548d2",
+      "name": "Add Message ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.circle.so/api/admin/v2/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"space_id\": 2137848,\n    \"name\": \"{{ JSON.stringify($json.problem_title).slice(1,-1) }}\",\n    \"status\": \"draft\",\n    \"tiptap_body\": {\n      \"body\": {\n        \"type\": \"doc\",\n        \"content\": [\n          {\n            \"type\": \"paragraph\",\n            \"content\": [\n              {\n                \"type\": \"text\",\n                \"text\": \"{{ JSON.stringify($json.problem_statement).slice(1,-1) }}\"\n              }\n            ]\n          }\n        ]\n      }\n    },\n    \"is_comments_enabled\": true,\n    \"is_liking_enabled\": true\n  }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1872,
+        128
+      ],
+      "id": "9fd413c9-053d-4082-9efe-ef952214dbbe",
+      "name": "Test Post To Circle",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "YnWAw0YhhXv0KJ5H",
+          "name": "Circle Admin API"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        112
+      ],
+      "id": "119cecf8-0f19-4edd-b63b-af2824034d6b",
+      "name": "When clicking ‘Execute workflow’",
+      "alwaysOutputData": true,
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Find existing problem statements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Problem Statement Agent": {
+      "main": [
+        [
+          {
+            "node": "Add Message ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find existing problem statements": {
+      "main": [
+        [
+          {
+            "node": "Add SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UpdateProblemStatement": {
+      "ai_tool": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateNewProblemRecord": {
+      "ai_tool": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "postProblemStatementsToCircle": {
+      "ai_tool": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add SessionId": {
+      "main": [
+        [
+          {
+            "node": "Problem Statement Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Test Post To Circle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "sessionId": "70b237bd-d11e-4d95-b445-9ea1909ac45b",
+          "airtableUser": "recJ6hyQ58EXzEUU9",
+          "airtableUserID": 7,
+          "Completed Onboarding": "true",
+          "chatInput": "hi",
+          "circleId": 42735856
+        }
+      }
+    ],
+    "Find existing problem statements": [
+      {
+        "json": {
+          "id": "recBSlg7hAiFoYKMd",
+          "createdTime": "2025-09-01T15:04:48.000Z",
+          "ID": 2,
+          "Status": "in-progress",
+          "Good problems": "Good problem 1\nGood problem 2",
+          "Terrain map": "Terrain Map",
+          "Test the fit research reflection": "Test the fit",
+          "Problem statement": "Test Problem Statement",
+          "User": [
+            "recJ6hyQ58EXzEUU9"
+          ],
+          "User ID": [
+            7
+          ]
+        }
+      }
+    ],
+    "Add SessionId": [
+      {
+        "json": {
+          "id": "rechb6u3lbcSOn7KE",
+          "createdTime": "2025-08-21T09:34:03.000Z",
+          "ID": 15,
+          "Status": "in-progress",
+          "Completion Date": "2025-08-22T15:34:30.427Z",
+          "User": [
+            "recJ6hyQ58EXzEUU9"
+          ],
+          "User ID": [
+            7
+          ],
+          "What you love": "guiding others to understand complex technical concepts while deepening my own mastery",
+          "What you're good at": "trusted advisor for workplace challenges with strong execution skills and ability to translate technical concepts for non-technical audiences",
+          "What the world needs": "helping companies transition to embrace AI enabled technology especially when they're not a typical tech company",
+          "What you're good at - Clarity": 8,
+          "What you love - Clarity": 8,
+          "What you can be paid for - Clarity": 0,
+          "What the world needs - Clarity": 8,
+          "sessionId": "70b237bd-d11e-4d95-b445-9ea1909ac45b"
+        }
+      }
+    ],
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "problem_title": "Tackling Social Inequalities Through Systems Change",
+          "problem_statement": "Growing social inequalities are deeply impacting health outcomes, economic participation, and opportunity. Despite a wealth of research and policy recommendations, there is a persistent gap between evidence and real-world implementation. For example, health systems often lack prevention initiatives and early intervention standards informed by data, lived experience and continuous learning; limiting the ability to support and develop sustainable and scalable interventions that can support people and build resilient, future-ready communities.This problem matters because it affects millions—especially children and young people and underserved groups—by perpetuating cycles of poor mental and physical health, reduced life chances, and economic inequality. Solving it requires systemic change, interdisciplinary collaboration, and inclusive innovation—none of which are easy to coordinate at scale. It emphasises:Using Monitoring, Evaluation, and Learning (MEL) frameworks.Informing policy and system change with research and real-time feedback.Prioritising underserved and underrepresented populations with an intersectional lensDriving inclusive innovation that creates measurable social value.I'm drawn to this challenge because it sits at the intersection of my values and strengths: creative problem-solving, equity-driven systems thinking, and a passion for improving health, education, environment and opportunities for next generation."
+        }
+      }
+    ]
+  },
+  "versionId": "2dd7023c-7fa1-40d9-b8b7-b3fff3ba09bf",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-28T13:26:24.286Z",
+      "updatedAt": "2025-08-28T13:26:24.286Z",
+      "role": "workflow:owner",
+      "workflowId": "gfXPl47SkRBYV9lh",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
