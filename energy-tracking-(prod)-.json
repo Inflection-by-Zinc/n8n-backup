@@ -1,18 +1,18 @@
 {
-  "createdAt": "2025-08-28T13:26:49.423Z",
-  "updatedAt": "2025-09-04T12:02:33.000Z",
-  "id": "bdZYxuAUVsCC8Nwe",
+  "createdAt": "2025-08-27T16:16:59.569Z",
+  "updatedAt": "2025-08-28T13:27:20.000Z",
+  "id": "9U86dDzLOBvryuVU",
   "name": "Energy Tracking (prod)",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
         "model": {
           "__rl": true,
-          "value": "claude-sonnet-4-20250514",
+          "value": "claude-3-7-sonnet-20250219",
           "mode": "list",
-          "cachedResultName": "Claude Sonnet 4"
+          "cachedResultName": "Claude Sonnet 3.7"
         },
         "options": {}
       },
@@ -22,7 +22,7 @@
         608,
         288
       ],
-      "id": "1c40e4a4-9562-4be0-ad85-e510490547b6",
+      "id": "371bbc9c-33a8-482b-b0c2-ad63d45302a7",
       "name": "Anthropic Chat Model",
       "credentials": {
         "anthropicApi": {
@@ -41,7 +41,7 @@
         768,
         288
       ],
-      "id": "c8f13963-5071-4778-9c39-b1cf0857e0d8",
+      "id": "292cf0fc-99c9-4310-8a05-7f928343ee93",
       "name": "Simple Memory"
     },
     {
@@ -54,7 +54,7 @@
         -272,
         48
       ],
-      "id": "e6550c3a-61ed-41c4-b211-cf7740f00833",
+      "id": "b4e15c9f-6133-43e7-a70d-814d3179dca1",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -175,7 +175,7 @@
         928,
         304
       ],
-      "id": "735ad917-bc45-4cbf-a867-267d929fd7a6",
+      "id": "1c8c2828-a96e-47ed-8b7b-3448b89f4b5b",
       "name": "SaveEnergyTrackingToAirtable",
       "credentials": {
         "airtableTokenApi": {
@@ -209,7 +209,7 @@
         -48,
         48
       ],
-      "id": "79576da2-9179-4d01-a136-1a7e348432c2",
+      "id": "a1e95070-952b-4caf-b52f-a284c232f932",
       "name": "Get Energy Level Lookup",
       "executeOnce": true,
       "credentials": {
@@ -244,7 +244,7 @@
         176,
         48
       ],
-      "id": "9754da4e-e4bf-4f83-9b47-ecf9c8c5d134",
+      "id": "61e6707c-d6d8-44ad-a0a3-65f3805c1382",
       "name": "Get Engagement Level Lookup",
       "executeOnce": true,
       "credentials": {
@@ -274,7 +274,7 @@
         384,
         48
       ],
-      "id": "e9765a41-478a-4fcb-a458-2ecebb27217c",
+      "id": "90cb64ff-bac4-44c4-8f35-ad56f1f18590",
       "name": "Add SessionId",
       "executeOnce": true
     },
@@ -283,7 +283,7 @@
         "promptType": "define",
         "text": "={{ $('When Executed by Another Workflow').item.json.chatInput }}",
         "options": {
-          "systemMessage": "=You are an expert at capturing energy tracking insights from users for their day and save the results to Airtable for later analysis.\n\nYou are a UK citizen and always use British spellings (e.g specialise, not specialize) and expressions (e.g. great, not awesome!).\n\n## Instructions\n- Start by asking the user about meaningful activities completed in their day (there may be one or more)\n- Once they've answered iterate through each and aim to illicit details that would allow you to complete the questions below\n- Ask clarifying questions one by one.\n- Allow user to respond with numbers for energy/engagement scores to make it easy/quick for them to track\n- You can ask them to score their energy and how engaged they were and notes in a single message if the user has done this before.\n- Only supply the descriptions for the levels if the user asks\n- At the end of the session, you should reflect back what the user has said and draw out any useful insights that might exist in what they have told you.\n- Do not share Airtable ids with the user, these are for you to help you save the right records\n- Lookup tables below are shown in the following format\n    score : short desc : airtable record id : long desc\n\n## Questions that form energy tracking submission\n1. What did you do today?\n- Describe the activity in a short, specific phrase  E.g. writing a proposal, managing logistics, walking dog\n\n2. How did this affect your energy? (the user MUST select one of these exact options)\n\n{{ $('Get Energy Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Energy Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\nThe id's in parentheses above are the linked airtable records that you should use to save to the 'Energy Level' and 'Engagement/Flow' fields.\n\n3. How engaged were you in this activity?\n\n{{ $('Get Engagement Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Engagement Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\n4. Notes\n\nOptionally ask the user to give context on why did they rate the answers above? Was there a specific element or part of the exercise that caused this?\n\n## Saving results\nOnce you have captured the requisite inputs, use the `saveEnergyTrackingToAirtable` tool to persist energy tracking. Once saved, give the user confirmation that it's saved successfully - DO NOT refer to AirTable. You will need to invoke this function once for each activity. It does not support batch saving.\n\n## Message Formatting Guidelines\n- IMPORTANT: Never include empty messages in the conversation history.\n- Always ensure that every message in the messages array has non-empty content.\n- If a message would be empty, either provide a default value or omit the message entirely."
+          "systemMessage": "=You are an expert at capturing energy tracking insights from users for their day and save the results to Airtable for later analysis.\n\n## Instructions\n- Start by asking the user about meaningful activities completed in their day (there may be one or more)\n- Once they've answered iterate through each and aim to illicit details that would allow you to complete the questions below\n- Ask clarifying questions one by one.\n- Allow user to respond with numbers for energy/engagement scores to make it easy/quick for them to track\n- Only supply the descriptions for the levels if the user asks\n- Do not share Airtable ids with the user, these are for you to help you save the right records\n- Lookup tables below are shown in the following format\n    score : short desc : airtable record id : long desc\n\n## Questions that form energy tracking submission\n1. What did you do today?\n- Describe the activity in a short, specific phrase  E.g. writing a proposal, managing logistics, walking dog\n\n2. How did this affect your energy? (the user MUST select one of these exact options)\n\n{{ $('Get Energy Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Energy Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\nThe id's in parentheses above are the linked airtable records that you should use to save to the 'Energy Level' and 'Engagement/Flow' fields.\n\n3. How engaged were you in this activity?\n\n{{ $('Get Engagement Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Engagement Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\n4. Notes\n\nOptionally ask the user to give context on why did they rate the answers above? Was there a specific element or part of the exercise that caused this?\n\n## Saving results\nOnce you have captured the requisite inputs, use the `saveEnergyTrackingToAirtable` tool to persist energy tracking. Once saved, give the user confirmation that it's saved successfully. You will need to invoke this function once for each activity. It does not support batch savib"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -292,32 +292,8 @@
         640,
         48
       ],
-      "id": "23f078af-e937-435e-b781-d8ff1202f4f3",
+      "id": "9b1e9e62-e60f-422b-b4e1-9601e0267323",
       "name": "Energy Tracking Agent"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "51d2071f-1628-47b2-b5cd-f6c300a8ba01",
-              "name": "=message_id",
-              "value": "={{ $('Add SessionId').item.json.sessionId }}_{{ Date.now() }}_assistant",
-              "type": "string"
-            }
-          ]
-        },
-        "includeOtherFields": true,
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1008,
-        48
-      ],
-      "id": "7dc3c9e8-be58-4387-9407-598a59e9fde4",
-      "name": "Add Message ID"
     }
   ],
   "connections": {
@@ -392,17 +368,6 @@
         [
           {
             "node": "Energy Tracking Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Energy Tracking Agent": {
-      "main": [
-        [
-          {
-            "node": "Add Message ID",
             "type": "main",
             "index": 0
           }
@@ -530,14 +495,14 @@
       }
     ]
   },
-  "versionId": "c39bbdab-78df-4299-83c0-7b65874b6784",
+  "versionId": "349e9654-79a8-4c7d-b985-115aafb7a3da",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-08-28T13:26:49.426Z",
-      "updatedAt": "2025-08-28T13:26:49.426Z",
+      "createdAt": "2025-08-27T16:16:59.573Z",
+      "updatedAt": "2025-08-27T16:16:59.573Z",
       "role": "workflow:owner",
-      "workflowId": "bdZYxuAUVsCC8Nwe",
+      "workflowId": "9U86dDzLOBvryuVU",
       "projectId": "7M5MjjX95kwsCbaT"
     }
   ],
