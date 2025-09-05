@@ -1,0 +1,3831 @@
+{
+  "createdAt": "2025-08-08T14:10:48.994Z",
+  "updatedAt": "2025-09-04T07:55:44.000Z",
+  "id": "PulPh1UsiDPGx2U1",
+  "name": "Inflection MVP (prod)",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {
+          "responseMode": "responseNode"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -688,
+        1888
+      ],
+      "id": "c444eb39-05c7-41a6-b09d-cbc6f6c8ed65",
+      "name": "When chat message received",
+      "webhookId": "9e99d03e-7d77-4d8a-b8ff-eed5752ab92c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://app.circle.so/api/v1/headless/auth_token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.user_auth.email }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        1888
+      ],
+      "id": "be5c4ad8-bf1a-445c-8200-c2a7234bc5f2",
+      "name": "Check email exists in circle community",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "3nDi1sFvxbgHLY86",
+          "name": "Circle Headless API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49e7a725-a23e-466e-9acd-1a212a833cc6",
+              "leftValue": "={{ $json.body.access_token }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "390408bc-a08b-4009-8962-051cc931930c",
+              "leftValue": "={{ $json.body.community_id }}",
+              "rightValue": "380195",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "686deb74-1c7d-4150-acc4-feb02259c003",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": "200",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        1888
+      ],
+      "id": "86f9b8de-f056-4b44-8b12-5ed93ba496ae",
+      "name": "If user found in circle"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"output\": \"Please log into Circle.so to use this chat.\",\n  \"authentication_failed\": true,\n  \"action\": \"disable_chat\"\n}\n",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        208,
+        1984
+      ],
+      "id": "b58142bb-b324-4709-9752-59fdc8d528e2",
+      "name": "Tell user they're not authenticated and block chat"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=[{\n    \"output\": \"Hi {{ $('Get Circle Profile').item.json.first_name }}! 👋 Welcome back to Inflection. How can I help you today?\"\n}]",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1552,
+        1504
+      ],
+      "id": "14fa54e4-dbc4-43c4-a42a-19107e5e9b1b",
+      "name": "Send personalised welcome"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "22ffa478-1317-4f28-900b-8abed59a728d",
+              "leftValue": "={{$json.id !== undefined}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        1264
+      ],
+      "id": "a32c9abb-b465-4e49-a02d-f8b73bcac844",
+      "name": "If Airtable user record exists"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Get Circle Profile').item.json.email }}",
+            "Circle ID": "={{ $('Get Circle Profile').item.json.id }}",
+            "First Name": "={{ $('Get Circle Profile').item.json.first_name }}",
+            "Last Name": "={{ $('Get Circle Profile').item.json.last_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Ikigai",
+              "displayName": "Ikigai",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Circle ID",
+              "displayName": "Circle ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Onboarding Assessment",
+              "displayName": "Onboarding Assessment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Energy Tracking",
+              "displayName": "Energy Tracking",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Messages",
+              "displayName": "Messages",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Problem Statements",
+              "displayName": "Problem Statements",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "First Time",
+              "displayName": "First Time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Agreed To Terms",
+              "displayName": "Agreed To Terms",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1104,
+        1408
+      ],
+      "id": "b7de5dfa-b34a-4764-b61e-960d3140744f",
+      "name": "Create User record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "filterByFormula": "={Email} =  '{{ $('Get Circle Profile').item.json.email }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        1264
+      ],
+      "id": "c3c380be-e018-49cd-885e-efd26955c3c8",
+      "name": "Search airtable user records",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"sessionId\": \"{{ $('When chat message received').item.json.sessionId }}\",\n  \"airtableUser\": \"{{ $json.id }}\",\n  \"airtableUserID\": {{ $json.Id }},\n  \"Completed Onboarding\": \"{{ $json['Completed Onboarding'] || false }}\",\n  \"chatInput\": \"{{ $('Sanitise User Input').item.json.message }}\",\n  \"circleId\": {{ $json[\"Circle ID\"] }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        2000
+      ],
+      "id": "d346e59d-e510-4ded-a7b4-3536b420610e",
+      "name": "Add sessionId"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "filterByFormula": "={Circle ID} =  {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        2000
+      ],
+      "id": "b2d00008-af30-40cc-bb18-6a645a45b2fe",
+      "name": "Get user record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9ND0cbIjFA6Hz31K",
+          "mode": "list",
+          "cachedResultName": "Inflection — Ikigai (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        1808
+      ],
+      "id": "111e5745-ba07-4282-80f6-4fe47cba0f2e",
+      "name": "Execute Ikigai Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljTF6x0iBX59kDi",
+          "mode": "list",
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbljTF6x0iBX59kDi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_id": "={{ $('Add sessionId').item.json.sessionId }}",
+            "content": "={{ $('Respond to User').item.json.output }}",
+            "ts": "={{ new Date().toISOString() }}",
+            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "role": "assistant",
+            "message id": "={{ $('Respond to User').item.json.message_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "message id",
+              "displayName": "message id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "user",
+                  "value": "user"
+                },
+                {
+                  "name": "assistant",
+                  "value": "assistant"
+                },
+                {
+                  "name": "system",
+                  "value": "system"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "feedback type",
+              "displayName": "feedback type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "thumbs up",
+                  "value": "thumbs up"
+                },
+                {
+                  "name": "thumbs down",
+                  "value": "thumbs down"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2000,
+        2000
+      ],
+      "id": "0e2983d4-c2d7-47fc-9c08-59be18f224fd",
+      "name": "Save Agent Output Trace",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljTF6x0iBX59kDi",
+          "mode": "list",
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbljTF6x0iBX59kDi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_id": "={{ $('When chat message received').item.json.sessionId }}",
+            "content": "={{ $('When chat message received').item.json.chatInput }}",
+            "ts": "={{ new Date().toISOString() }}",
+            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "role": "user"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "message id",
+              "displayName": "message id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "user",
+                  "value": "user"
+                },
+                {
+                  "name": "assistant",
+                  "value": "assistant"
+                },
+                {
+                  "name": "system",
+                  "value": "system"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "feedback type",
+              "displayName": "feedback type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "thumbs up",
+                  "value": "thumbs up"
+                },
+                {
+                  "name": "thumbs down",
+                  "value": "thumbs down"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1776,
+        2000
+      ],
+      "id": "c4b437a5-c0dd-4eeb-86de-b39d48768e1e",
+      "name": "Save User Input Trace",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1552,
+        2000
+      ],
+      "id": "25192ba1-ea87-48de-b292-37474e03b0fe",
+      "name": "Respond to User"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('Full input:', JSON.stringify($input.all(), null, 2));\nconst inputData = $input.first().json;\nconsole.log('Input data:', JSON.stringify(inputData, null, 2));\n\n// Look for metadata in different possible locations\nconsole.log('Checking for metadata...');\nif (inputData.metadata) {\n  console.log('Found metadata:', JSON.stringify(inputData.metadata, null, 2));\n}\n\n// Sanitize chatInput - handle different input formats and escape special characters\nlet sanitizedMessage = '';\nif (inputData.chatInput) {\n  // Remove any control characters and sanitize\n  sanitizedMessage = inputData.chatInput\n    .toString()\n    .replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '') // Remove control characters\n    .replace(/\"/g, '\\\\\"')                          // Escape double quotes\n    .trim();\n} else if (inputData.message) {\n  // Handle alternate message field\n  sanitizedMessage = inputData.message\n    .toString()\n    .replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '') \n    .replace(/\"/g, '\\\\\"')\n    .trim();\n}\n\nconsole.log('Sanitized message:', sanitizedMessage);\n\nreturn [{\n  json: {\n    message: sanitizedMessage,\n    session_id: inputData.sessionId,\n    action: inputData.action,\n    user_auth: inputData.metadata || null,\n    debug: 'Checking for metadata'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        1888
+      ],
+      "id": "d203ac8e-fd18-44bc-a1bf-9d607ec81e2e",
+      "name": "Sanitise User Input"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('When chat message received').item.json.metadata.selectedOption }}",
+                    "rightValue": "ikigai",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5986ad2c-c07f-4ca4-97bd-68ceb9a6e6da"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ikigai"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "efadc2b3-f3e9-43c9-9250-d7f64afc7c67",
+                    "leftValue": "={{ $('When chat message received').item.json.metadata.selectedOption }}",
+                    "rightValue": "energy",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "energy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "433f528d-4928-49ba-940c-5598375de75a",
+                    "leftValue": "={{ $('When chat message received').item.json.metadata.selectedOption }}",
+                    "rightValue": "problem",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "problem"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1104,
+        1984
+      ],
+      "id": "c23b8f45-b524-464a-9e43-2202013b253e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "611f3105-a678-4b93-af48-a3d24ff3c946",
+              "leftValue": "={{ $('Search airtable user records').item.json[\"First Time\"] || $('Create User record').item.json[\"fields\"][\"First Time\"] }}",
+              "rightValue": "yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "0741f38a-8e57-4e30-9c41-51bbd720efab",
+              "leftValue": "={{ $('Search airtable user records').item.json[\"Agreed To Terms\"] || $('Create User record').item.json[\"fields\"][\"Agreed To Terms\"] }}",
+              "rightValue": "no",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1328,
+        1264
+      ],
+      "id": "597b3f54-ee31-4f4d-a74d-415a3a8aa4a9",
+      "name": "If first time"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=[{\n\"output\": \"Hello {{$('Get Circle Profile').item.json.first_name}}, Welcome to Inflection. 👋\\n\\nI’m an AI Coach designed to provide personalised support, accountability, and community connections throughout your journey. \\n\\nI will give you:\\n\\n- Personalised 24/7 guidance and feedback on your fieldwork\\n- Progress tracking and accountability support\\n- Curated introductions to relevant members of the community\\n- Assistance with sharing your fieldwork with the community (only with your permission) \\n\\nWithout opting in to use me you can still fully participate in the fellowship, but you'll miss out on personalised support and community matching features.\\n\\nYou can learn more about [how we use your data](https://inflection-fellowship.zinc.vc/ai-coach-info) and our [privacy policy](https://inflection-fellowship.zinc.vc/ai-coach-privacy-policy). \\n\\nPlease note, the AI coach can make mistakes. Please double-check it’s responses.\",\n\"isFirstVisit\": true\n}]",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1552,
+        1232
+      ],
+      "id": "4d2da1ea-7bc2-4c76-a554-1fe04fbe391d",
+      "name": "Ask for consent"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('When chat message received').item.json.action }}",
+                    "rightValue": "initialize",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2a8d4a4c-6d6d-4bd2-9c67-8435f3be3709"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "initialise"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "17bb0648-b564-46dc-8136-8efd0fb3c8a8",
+                    "leftValue": "={{ $('When chat message received').item.json.action }}",
+                    "rightValue": "accept_terms",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "accept terms"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ab52bd7d-3ea8-4d12-850e-d98cccb7b2e0",
+                    "leftValue": "={{ $('When chat message received').item.json.action }}",
+                    "rightValue": "decline_terms",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "decline terms"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b835cdc5-8d4f-46a0-a2cc-bd25c198f3f6",
+                    "leftValue": "={{ $('When chat message received').item.json.action }}",
+                    "rightValue": "sendMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "send message"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1a4b31fd-23bf-4695-a1ea-8274f60f62c4",
+                    "leftValue": "={{ $('When chat message received').item.json.action }}",
+                    "rightValue": "feedback",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "feedback"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        432,
+        1744
+      ],
+      "id": "a0e435b4-1097-46e7-8bf6-4676ead1e107",
+      "name": "Classify Messages"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=[{\n    \"output\": \"Thank you for accepting the terms. Please click below to begin your coaching journey!\"\n}]",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        656,
+        1600
+      ],
+      "id": "55ff3324-642d-4c76-a7a4-1b5c242e6967",
+      "name": "Acknowledge Accepting Terms"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Time": "no",
+            "id": "={{ $json.id }}",
+            "Agreed To Terms": "yes"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Ikigai",
+              "displayName": "Ikigai",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Circle ID",
+              "displayName": "Circle ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Onboarding Assessment",
+              "displayName": "Onboarding Assessment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Energy Tracking",
+              "displayName": "Energy Tracking",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Messages",
+              "displayName": "Messages",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Problem Statements",
+              "displayName": "Problem Statements",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "First Time",
+              "displayName": "First Time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Agreed To Terms",
+              "displayName": "Agreed To Terms",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1104,
+        1600
+      ],
+      "id": "ae849d28-ea89-4511-8181-da290bf6149d",
+      "name": "Mark terms accepted",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "filterByFormula": "={Circle ID} =  {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        1600
+      ],
+      "id": "9ae41418-d2f2-4a56-bcfa-4e75290a78cc",
+      "name": "Get user record1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://app.circle.so/api/admin/v2/community_members/{{$json.body.community_member_id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        1792
+      ],
+      "id": "711ad98d-8f1d-4056-8cf8-673aff766de1",
+      "name": "Get Circle Profile",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "YnWAw0YhhXv0KJ5H",
+          "name": "Circle Admin API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "=[{\n    \"output\": \"To use the AI Coach, you'll need to agree to our terms and conditions. You can click below or return anytime to update your preferences.\"\n}]",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        656,
+        1792
+      ],
+      "id": "4fb49020-6f4f-4bb3-8a35-5a457765f9ac",
+      "name": "Acknowledge Declining Terms"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "filterByFormula": "={Circle ID} =  {{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        1792
+      ],
+      "id": "6bed5c9c-6d9d-48e9-94e8-49b47e6ba70c",
+      "name": "Get user record2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl6lNt081pZviaOF",
+          "mode": "list",
+          "cachedResultName": "Users",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl6lNt081pZviaOF"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "First Time": "no",
+            "id": "={{ $json.id }}",
+            "Agreed To Terms": "no"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Ikigai",
+              "displayName": "Ikigai",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Circle ID",
+              "displayName": "Circle ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Onboarding Assessment",
+              "displayName": "Onboarding Assessment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Energy Tracking",
+              "displayName": "Energy Tracking",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Messages",
+              "displayName": "Messages",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Problem Statements",
+              "displayName": "Problem Statements",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "First Time",
+              "displayName": "First Time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Agreed To Terms",
+              "displayName": "Agreed To Terms",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1104,
+        1792
+      ],
+      "id": "bf9f8dc5-b33e-46af-8739-bf0eb84fef9f",
+      "name": "Mark terms declined",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljTF6x0iBX59kDi",
+          "mode": "list",
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbljTF6x0iBX59kDi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "message id": "={{ $('When chat message received').item.json.messageId }}",
+            "feedback type": "={{ $('When chat message received').item.json.feedbackType === 'thumbs_up' ? 'thumbs up' : 'thumbs down' }}"
+          },
+          "matchingColumns": [
+            "message id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "message id",
+              "displayName": "message id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "user",
+                  "value": "user"
+                },
+                {
+                  "name": "assistant",
+                  "value": "assistant"
+                },
+                {
+                  "name": "system",
+                  "value": "system"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "feedback type",
+              "displayName": "feedback type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "thumbs up",
+                  "value": "thumbs up"
+                },
+                {
+                  "name": "thumbs down",
+                  "value": "thumbs down"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        656,
+        2192
+      ],
+      "id": "5d014391-06bb-4660-984b-71a10c5b354a",
+      "name": "Store User Feedback",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "gfXPl47SkRBYV9lh",
+          "mode": "list",
+          "cachedResultName": "Inflection — Problem Statments (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        2192
+      ],
+      "id": "5c7a0d81-525e-47eb-b9fd-7309d78b3b92",
+      "name": "Execute Problem Statement"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "bdZYxuAUVsCC8Nwe",
+          "mode": "list",
+          "cachedResultName": "Inflection — Energy Tracking (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        2000
+      ],
+      "id": "130e81b4-a65e-4ec4-8d57-0a4d61f5152f",
+      "name": "Execute Energy Workflow"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Sanitise User Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check email exists in circle community": {
+      "main": [
+        [
+          {
+            "node": "If user found in circle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If user found in circle": {
+      "main": [
+        [
+          {
+            "node": "Get Circle Profile",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tell user they're not authenticated and block chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Airtable user record exists": {
+      "main": [
+        [
+          {
+            "node": "If first time",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create User record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User record": {
+      "main": [
+        [
+          {
+            "node": "If first time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search airtable user records": {
+      "main": [
+        [
+          {
+            "node": "If Airtable user record exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add sessionId": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user record": {
+      "main": [
+        [
+          {
+            "node": "Add sessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Ikigai Workflow": {
+      "main": [
+        [
+          {
+            "node": "Respond to User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save User Input Trace": {
+      "main": [
+        [
+          {
+            "node": "Save Agent Output Trace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to User": {
+      "main": [
+        [
+          {
+            "node": "Save User Input Trace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitise User Input": {
+      "main": [
+        [
+          {
+            "node": "Check email exists in circle community",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Execute Ikigai Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Energy Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Problem Statement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If first time": {
+      "main": [
+        [
+          {
+            "node": "Ask for consent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send personalised welcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Messages": {
+      "main": [
+        [
+          {
+            "node": "Search airtable user records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Acknowledge Accepting Terms",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Acknowledge Declining Terms",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get user record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Store User Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acknowledge Accepting Terms": {
+      "main": [
+        [
+          {
+            "node": "Get user record1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user record1": {
+      "main": [
+        [
+          {
+            "node": "Mark terms accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Circle Profile": {
+      "main": [
+        [
+          {
+            "node": "Classify Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acknowledge Declining Terms": {
+      "main": [
+        [
+          {
+            "node": "Get user record2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user record2": {
+      "main": [
+        [
+          {
+            "node": "Mark terms declined",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Problem Statement": {
+      "main": [
+        [
+          {
+            "node": "Respond to User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Energy Workflow": {
+      "main": [
+        [
+          {
+            "node": "Respond to User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Search airtable user records": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Ikigai": [
+            "rechb6u3lbcSOn7KE"
+          ],
+          "Circle ID": 42735856,
+          "Energy Tracking": [
+            "recWEaJ19l1aU2td9",
+            "receSCBjtHtvbqWXm",
+            "recyMbJlgHkcLxJv5",
+            "recKmtNhRvE31igqM",
+            "recFF15K8TMRtQGxG",
+            "recdVtope0wOBG2lT",
+            "recN7F9gjueeSqIJv"
+          ],
+          "Messages": [
+            "recLxzlx7KGazCupT",
+            "recVgoWCxJcH5C9vd",
+            "recWZO0k7Sg5rZJT0",
+            "recWsPx7d8VeOP2bs",
+            "rec0rg8SWPFZN8Jm8",
+            "rec0xo50XuniFnPTn",
+            "recLInZJFtiMfnvDC",
+            "recDQg39vV26sopsq",
+            "recZIX9Z5YaV3HFZv",
+            "recWPbPGkUDeJmbog",
+            "recKQB6xMlnTJibAj",
+            "recInrAXKWW7WOGWs",
+            "recRAIL0mdGITbpz8",
+            "recb1KrLBAmzWw6Qp",
+            "reclGbZv5A3shgrSh",
+            "recbNQrbiZsncgzE8",
+            "rec0QnWZNWw6w3VvE",
+            "recw9I7HIW3THOlIb",
+            "rec8eoLoYCt6hIppr",
+            "recu98SPzK1See3lH",
+            "recvivPSNSGVTrRLj",
+            "recp57yhUdJ5JJh7O",
+            "recnIibBGeV3aqosg",
+            "recIX71xtsBGSCy6A",
+            "rectx9zsewRkKlFh8",
+            "recVemlc5NLDufSNx",
+            "recC3b1fTiGBjhFdh",
+            "rechSWjK0fxkYl8dM",
+            "rec0U95gKDFfbizlG",
+            "recTLa9oaa1xpkHMZ",
+            "recQt5uwF5jGZ5I7I",
+            "rec4JFt5Sbone4xnJ",
+            "rec1m3XJipj3Mhp0K",
+            "recV5SAZAJ9gdUpcN",
+            "rec5HyNwLihLjtXKK",
+            "recu4IRshufulwjuk",
+            "recJ9ahfKxfdb7Axm",
+            "rec4sKl65PB5zSTFs",
+            "recZS28CBVY8bs4PU",
+            "recwvBgO1A0HUtCfR",
+            "recjLTKEr8ijsB2pH",
+            "recwkRLxgOhBT46EJ",
+            "rec4Nz2KdFVSvOI1Q",
+            "recr1e21eQ9G79lTb",
+            "reciDT5btlTUFnSyw",
+            "recOERR8XnnzCjpqN",
+            "rec01R3RjRTaVuFrw",
+            "recWNtlAzIuCzZbPe",
+            "recloWn3Bp2tTpO7J",
+            "reczWslxbrHvYN8dg",
+            "recre0DyW1LyFdNKE",
+            "reciMEzlRcd3TBl8Y",
+            "recz2Pz2w5LPMb3tE",
+            "recRFFZktGiNTDRC7",
+            "recAASXdOherZj6Sc",
+            "recTf2eFwQXHTz3Pd",
+            "rec0kqPLfWNQFnCWL",
+            "recZPXNtC0RyFj6jC",
+            "recrqrJYtiX79D0R2",
+            "recCUcemgadPVUcQ7",
+            "reclmyrg2hJHYuBWY",
+            "recqw2bb3fIgkFAkg",
+            "rect5kCBDrODbkUdK",
+            "recpy5l81Zf8OQGp0",
+            "reczqKVFW6P4fJ6O5",
+            "recIA7IjqhHYukyTk",
+            "rec20mpt8q9nOWoyU",
+            "recY7LmFIJckT54X7",
+            "recrxJ5PmEKiJvJ9k",
+            "recZ8Ds3wJPOMy7E9",
+            "recf6h7F6XIvs6mIe",
+            "recu10iZvRakkJtDY",
+            "recJEV053lfRd3Y4B",
+            "rec4HcpBljP4qeYiD",
+            "recLRAgjuTpa66bSu",
+            "recJeKKTOeObKBcO1",
+            "rec68ijIHSYlq6tXi",
+            "recFNE7VokRhjyEHW",
+            "recksr6fNwGiwOWZ5",
+            "recnSNUav1HCqUZIJ",
+            "recY7S0koSdCgrJVG",
+            "recsbAEQFVkvl8WT9",
+            "rechZBYgKQQ6LUdyo",
+            "recUS6qeCUAZuXZR9",
+            "rechz20tMQngSPHjI",
+            "recJOJiyU0PPz3QUg",
+            "recwRvlFZsfD4eTDj",
+            "reckDASReTdeqhyvL",
+            "recZFjZfHNrWo7VRw",
+            "rec5PnmQTYH4JsYGv",
+            "recuCCPPrhmKDJjrQ",
+            "rectH9jBy7Cu9jLNU",
+            "recrE2SEW281Xf78s",
+            "rec2IFu0W9qHj0NiD",
+            "recibJBeDnzJNMM18",
+            "recT7dnsVNK7kyKGL",
+            "reckwFWERpsjpM7YO",
+            "rec1i3kpPT6TddTbf",
+            "recnb8S2aVYffDTw0",
+            "recohv8ll8WEObTbt",
+            "recpSJoNAjGSrsymL",
+            "recuuWKYZdX76bK1a",
+            "recq1IcsOG0YsYFxk",
+            "recqFvKKoS7myR6dF",
+            "recMrrElJ5yS7WCaH",
+            "recyUGuJaEjeABUTa",
+            "recpQxzjeMb7JBmVJ",
+            "rec3I5DvQBfPmneCP",
+            "recxD6xIl3OABov0R",
+            "recWX02JNN3jrRh4Z",
+            "recVc0heXbJH5tjXt",
+            "rec7As9bQQzEotqsT",
+            "recyqyiYVytTtPV7e",
+            "recXFWiBgI83vAMAi",
+            "recNgvlI1fY2DxmJq",
+            "recgpgNQsGjnart8J",
+            "recwhmpRakTuVP0LT",
+            "recKp4Ao3n0aw18e2",
+            "recXdVVCmhU1Y3i01",
+            "recOAADunRQiRhXza",
+            "recAHM7z1SykmJKHo",
+            "rec2wN8DPVit3qK0F",
+            "recpnKDReBblRHj6b",
+            "reccPpq1JolnKmKWF",
+            "recXKCPMoFg0M7uKB",
+            "recm8YBNqReZp46E7",
+            "recdwe6g1W3klLlmt",
+            "recQ3x4VqVwvwjDac",
+            "recr5lEwEHpELH6g8",
+            "reco9bhEncEMO6C84",
+            "recKomePAlHGrHeLq",
+            "recwhjRhgZhGCh8h7",
+            "recjlD0DNSDlMBe5W",
+            "recFSfLx26iAMWeo4",
+            "recB7vgQSfd1it3ez",
+            "recNdc3icDSQOiW0f",
+            "recoMjnVHWWjrV86R",
+            "recffQwC8imLIYuM0",
+            "recR27iOfx15flBwN",
+            "recCCTNKXqUWarptZ",
+            "recA62HBxgjEw5mUc",
+            "rec1tLGntac2XwnS8",
+            "rectjs1XQlzYOJi6F",
+            "recsOh2t4SpSEYjci",
+            "recoGRhSLbY4zKymA",
+            "recLGma18jaqYDSgo",
+            "recN7fRjH1kuyM7nY",
+            "recSmO2vDeQLpjriZ",
+            "rechrIpy27yFnSYdo",
+            "recxtfAYDhnSMt57c",
+            "recSzCu2I7Oo6TTy1",
+            "recVTCPl3skfEQtzh",
+            "recfqp1Du5oOn5RS0",
+            "recv8hwB9wEJpCZj2",
+            "recc317Ihh4fhc3je",
+            "recnZhqk0ZxkZFJtM",
+            "recyeWwxdmULcXsN4",
+            "recf3AX4ZSjkfwUaR",
+            "recUca0VVrJnO2ERw",
+            "receo25U7hO0lne5O",
+            "recl7IpDUaYSpD68Z",
+            "recmLl8Ygi6VzfEHE",
+            "reckgjsOSAwvqrnYm",
+            "recs9omET7XuOBsSP",
+            "rec2IJOpqsjHW8YuF",
+            "recKPUxK1q64Ekjpk",
+            "rec7dhqPH9hjcRmGD",
+            "rec79M1J3amW9iNek",
+            "recVJNszJ4bfhw3Kx",
+            "recDrVkv63Fv6gaQg",
+            "recWcn2iyXajwN941",
+            "recNSXpMMxuvcOUwF",
+            "recMbAJZOQ7pcmX2A",
+            "recVAz4S3QXSSWJXm",
+            "recH9TWWRRggoMs4A",
+            "recP0DQGkYlTl8gLd",
+            "recHFoztV8g1ybu7P",
+            "recb6TXwIQJvgInsl",
+            "recTbWD3HCru13u4b",
+            "rec2FFtmhniQBnQxV",
+            "recwucHo5p49IFEhb",
+            "recxgfQ1hHcRM17jF",
+            "recqewCN6n38ez9Tl",
+            "recDwSZVW8D69KHDa",
+            "recTPtJ1k6NiMdUQG",
+            "recsvUbhlMZOu8At7",
+            "recqu7TTWzfUKtyqn",
+            "recJNgEMw65peHPcN",
+            "rec1SQGoEcgYyuajF",
+            "recCxjzsJCXeQTzzr",
+            "recxxO50g6tyqukwj",
+            "recYDStdZm8m157Aa",
+            "rectDC3SVNvwtrIfg",
+            "recvcCvTKt1XtqPsj",
+            "recO5olTcttMuYfBi",
+            "rec2EA6dv3tpZr3dM",
+            "recTQfikKeL53OCld",
+            "rec7BiywMEJPSCU30",
+            "recnh8A2pBM7vmETS",
+            "recrdTWo8koGL5MGQ",
+            "recNkn7ulgTA9wksm",
+            "recRhtxlUWRvVktaf",
+            "recZamN2S593Dd3YH",
+            "recFuCJOCCM8SveXn",
+            "recl3TPuM8uJPf1vZ",
+            "recPEpoGOQU6uTwzw",
+            "recFD1jemY6UYSM3p",
+            "recY89MVVvQO0bJKC",
+            "rec2Chi9Vk8EDk9if",
+            "recxxi1Brk0KRiU13",
+            "recqAxY0lIA7k3qw2",
+            "recyrLD69jHqf1tps",
+            "rec0tLwLy9vS1vaZS",
+            "rec9UFm84WPPzjpuM",
+            "recwxmROK2GBXL73A",
+            "rechgh8SpZ4kR2dsQ",
+            "recC58NPBF8469z3N",
+            "recAe2MEtgKmhx8G6",
+            "recyLAF4YFpLSAbKv",
+            "rec2qdwYioVUtRQFY",
+            "recW7sxKMV0WXlT3A",
+            "recCGg4u7XMQghXD8",
+            "recRLpIK2Hlh2otH5",
+            "reci6Zkesyg3NDh3U",
+            "rectJvfYTCpA86eTE",
+            "rec7TKH8bAzh7zPdy",
+            "recLsu63FdGyFRpwe",
+            "recy9q1oy7wFhbbEs",
+            "recuSXRX8FDCIItZx",
+            "rec3HE7828fdJwcvG",
+            "rec7DeaUSD4gb3Z53",
+            "recJGmffPhHpwEQqU",
+            "rectWoii1yTeEhh80",
+            "recwmrmXaKWPT9WpV",
+            "recjae4OELdCuvre9",
+            "rec8hrvYoAg1Wu3qT"
+          ],
+          "First Time": "yes",
+          "Agreed To Terms": "no"
+        }
+      }
+    ],
+    "Add sessionId": [
+      {
+        "json": {
+          "sessionId": "5f0460f3-c38b-4853-92d2-24771a5a56e0",
+          "airtableUser": "recJ6hyQ58EXzEUU9",
+          "Completed Onboarding": "false"
+        }
+      }
+    ],
+    "Get user record": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Circle ID": 42735856
+        }
+      }
+    ],
+    "Respond to User": [
+      {
+        "json": {
+          "output": "I notice you have an in-progress Ikigai assessment that was previously started. Would you like to continue with this assessment, or would you prefer to start fresh with a new one? \n\nJust to set expectations: Ikigai is a thoughtful process of self-discovery that helps identify meaningful career directions by exploring four key areas:\n1. What you love\n2. What you're good at\n3. What the world needs\n4. What you can be paid for\n\nWe can explore these areas one at a time, and you can take breaks whenever you need to reflect. There are no rush or wrong answers - the goal is to help you discover insights about yourself.\n\nWould you like to continue with your existing assessment or start a new one?",
+          "message_id": "750a823c-b45b-4250-a5a1-c1c2e60c4816_1756720701668_assistant"
+        }
+      }
+    ],
+    "Sanitise User Input": [
+      {
+        "json": {
+          "message": "hey",
+          "session_id": "d83e47f8-496d-45f3-8e91-a2335bd141c0",
+          "action": "sendMessage",
+          "user_auth": {
+            "circle_user_id": "dev-user-123",
+            "email": "matt.walton@zinc.vc",
+            "name": "Dev User",
+            "session_cookie": "0KMbVnHK+Ufq72f6T3W41h8+bbX+Co3gRJXJouMVm6Y0eYiPIE2jD0p6FYPDAc4UWL9LWUGRravTySxJ4EkIx0KQqeKOFTTtYmEG0O1nYivp4IDlCnXAWF5pydy3QzaQLziANtUGwcRMFHgHP5I9esLGccVoTmH2GNJr/AYYAFtYeKsgjvyLxVruIVsx+g2WxGbgPp/9t+HbyjTJwIHqTChvHgf7DQLP9TwNWWBpCm6UztS54gI6YYSnNhn/TEh/mc4BeVvgR7lAabNQHUEFjozkd7tGRvmXoqfhtCkjxIm9KUvnv/oGdoZBJFpGjrPGeEUvZqNDkvC4USw08nEnTXJIpJdUV9OrVxEvtthdUp/Ko6Y6oCJAIiu/vnCrbE4Bz1coQTegxKJvSEShlWl--oLTHJ7Fw83z346Y2--a5yWo6hzVZRjS40PFSB1Kg==",
+            "source": "development"
+          },
+          "debug": "Checking for metadata"
+        }
+      }
+    ],
+    "Mark terms accepted": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Circle ID": 42735856
+        }
+      }
+    ],
+    "Get user record1": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Ikigai": [
+            "rechb6u3lbcSOn7KE"
+          ],
+          "Circle ID": 42735856,
+          "Energy Tracking": [
+            "recWEaJ19l1aU2td9",
+            "receSCBjtHtvbqWXm",
+            "recyMbJlgHkcLxJv5",
+            "recKmtNhRvE31igqM",
+            "recFF15K8TMRtQGxG",
+            "recdVtope0wOBG2lT",
+            "recN7F9gjueeSqIJv"
+          ],
+          "Messages": [
+            "recLxzlx7KGazCupT",
+            "recVgoWCxJcH5C9vd",
+            "recWZO0k7Sg5rZJT0",
+            "recWsPx7d8VeOP2bs",
+            "rec0rg8SWPFZN8Jm8",
+            "rec0xo50XuniFnPTn",
+            "recLInZJFtiMfnvDC",
+            "recDQg39vV26sopsq",
+            "recZIX9Z5YaV3HFZv",
+            "recWPbPGkUDeJmbog",
+            "recKQB6xMlnTJibAj",
+            "recInrAXKWW7WOGWs",
+            "recRAIL0mdGITbpz8",
+            "recb1KrLBAmzWw6Qp",
+            "reclGbZv5A3shgrSh",
+            "recbNQrbiZsncgzE8",
+            "rec0QnWZNWw6w3VvE",
+            "recw9I7HIW3THOlIb",
+            "rec8eoLoYCt6hIppr",
+            "recu98SPzK1See3lH",
+            "recvivPSNSGVTrRLj",
+            "recp57yhUdJ5JJh7O",
+            "recnIibBGeV3aqosg",
+            "recIX71xtsBGSCy6A",
+            "rectx9zsewRkKlFh8",
+            "recVemlc5NLDufSNx",
+            "recC3b1fTiGBjhFdh",
+            "rechSWjK0fxkYl8dM",
+            "rec0U95gKDFfbizlG",
+            "recTLa9oaa1xpkHMZ",
+            "recQt5uwF5jGZ5I7I",
+            "rec4JFt5Sbone4xnJ",
+            "rec1m3XJipj3Mhp0K",
+            "recV5SAZAJ9gdUpcN",
+            "rec5HyNwLihLjtXKK",
+            "recu4IRshufulwjuk",
+            "recJ9ahfKxfdb7Axm",
+            "rec4sKl65PB5zSTFs",
+            "recZS28CBVY8bs4PU",
+            "recwvBgO1A0HUtCfR",
+            "recjLTKEr8ijsB2pH",
+            "recwkRLxgOhBT46EJ",
+            "rec4Nz2KdFVSvOI1Q",
+            "recr1e21eQ9G79lTb",
+            "reciDT5btlTUFnSyw",
+            "recOERR8XnnzCjpqN",
+            "rec01R3RjRTaVuFrw",
+            "recWNtlAzIuCzZbPe",
+            "recloWn3Bp2tTpO7J",
+            "reczWslxbrHvYN8dg",
+            "recre0DyW1LyFdNKE",
+            "reciMEzlRcd3TBl8Y",
+            "recz2Pz2w5LPMb3tE",
+            "recRFFZktGiNTDRC7",
+            "recAASXdOherZj6Sc",
+            "recTf2eFwQXHTz3Pd",
+            "rec0kqPLfWNQFnCWL",
+            "recZPXNtC0RyFj6jC",
+            "recrqrJYtiX79D0R2",
+            "recCUcemgadPVUcQ7",
+            "reclmyrg2hJHYuBWY",
+            "recqw2bb3fIgkFAkg",
+            "rect5kCBDrODbkUdK",
+            "recpy5l81Zf8OQGp0",
+            "reczqKVFW6P4fJ6O5",
+            "recIA7IjqhHYukyTk",
+            "rec20mpt8q9nOWoyU",
+            "recY7LmFIJckT54X7",
+            "recrxJ5PmEKiJvJ9k",
+            "recZ8Ds3wJPOMy7E9",
+            "recf6h7F6XIvs6mIe",
+            "recu10iZvRakkJtDY",
+            "recJEV053lfRd3Y4B",
+            "rec4HcpBljP4qeYiD",
+            "recLRAgjuTpa66bSu",
+            "recJeKKTOeObKBcO1",
+            "rec68ijIHSYlq6tXi",
+            "recFNE7VokRhjyEHW",
+            "recksr6fNwGiwOWZ5",
+            "recnSNUav1HCqUZIJ",
+            "recY7S0koSdCgrJVG",
+            "recsbAEQFVkvl8WT9",
+            "rechZBYgKQQ6LUdyo",
+            "recUS6qeCUAZuXZR9",
+            "rechz20tMQngSPHjI",
+            "recJOJiyU0PPz3QUg",
+            "recwRvlFZsfD4eTDj",
+            "reckDASReTdeqhyvL",
+            "recZFjZfHNrWo7VRw",
+            "rec5PnmQTYH4JsYGv",
+            "recuCCPPrhmKDJjrQ",
+            "rectH9jBy7Cu9jLNU",
+            "recrE2SEW281Xf78s",
+            "rec2IFu0W9qHj0NiD",
+            "recibJBeDnzJNMM18",
+            "recT7dnsVNK7kyKGL",
+            "reckwFWERpsjpM7YO",
+            "rec1i3kpPT6TddTbf",
+            "recnb8S2aVYffDTw0",
+            "recohv8ll8WEObTbt",
+            "recpSJoNAjGSrsymL",
+            "recuuWKYZdX76bK1a",
+            "recq1IcsOG0YsYFxk",
+            "recqFvKKoS7myR6dF",
+            "recMrrElJ5yS7WCaH",
+            "recyUGuJaEjeABUTa",
+            "recpQxzjeMb7JBmVJ",
+            "rec3I5DvQBfPmneCP",
+            "recxD6xIl3OABov0R",
+            "recWX02JNN3jrRh4Z",
+            "recVc0heXbJH5tjXt",
+            "rec7As9bQQzEotqsT",
+            "recyqyiYVytTtPV7e",
+            "recXFWiBgI83vAMAi",
+            "recNgvlI1fY2DxmJq",
+            "recgpgNQsGjnart8J",
+            "recwhmpRakTuVP0LT",
+            "recKp4Ao3n0aw18e2",
+            "recXdVVCmhU1Y3i01",
+            "recOAADunRQiRhXza",
+            "recAHM7z1SykmJKHo",
+            "rec2wN8DPVit3qK0F",
+            "recpnKDReBblRHj6b",
+            "reccPpq1JolnKmKWF",
+            "recXKCPMoFg0M7uKB",
+            "recm8YBNqReZp46E7",
+            "recdwe6g1W3klLlmt",
+            "recQ3x4VqVwvwjDac",
+            "recr5lEwEHpELH6g8",
+            "reco9bhEncEMO6C84",
+            "recKomePAlHGrHeLq",
+            "recwhjRhgZhGCh8h7",
+            "recjlD0DNSDlMBe5W",
+            "recFSfLx26iAMWeo4",
+            "recB7vgQSfd1it3ez",
+            "recNdc3icDSQOiW0f",
+            "recoMjnVHWWjrV86R",
+            "recffQwC8imLIYuM0",
+            "recR27iOfx15flBwN",
+            "recCCTNKXqUWarptZ",
+            "recA62HBxgjEw5mUc",
+            "rec1tLGntac2XwnS8",
+            "rectjs1XQlzYOJi6F",
+            "recsOh2t4SpSEYjci",
+            "recoGRhSLbY4zKymA",
+            "recLGma18jaqYDSgo",
+            "recN7fRjH1kuyM7nY",
+            "recSmO2vDeQLpjriZ",
+            "rechrIpy27yFnSYdo",
+            "recxtfAYDhnSMt57c",
+            "recSzCu2I7Oo6TTy1",
+            "recVTCPl3skfEQtzh",
+            "recfqp1Du5oOn5RS0",
+            "recv8hwB9wEJpCZj2",
+            "recc317Ihh4fhc3je",
+            "recnZhqk0ZxkZFJtM",
+            "recyeWwxdmULcXsN4",
+            "recf3AX4ZSjkfwUaR",
+            "recUca0VVrJnO2ERw",
+            "receo25U7hO0lne5O",
+            "recl7IpDUaYSpD68Z",
+            "recmLl8Ygi6VzfEHE",
+            "reckgjsOSAwvqrnYm",
+            "recs9omET7XuOBsSP",
+            "rec2IJOpqsjHW8YuF",
+            "recKPUxK1q64Ekjpk",
+            "rec7dhqPH9hjcRmGD",
+            "rec79M1J3amW9iNek",
+            "recVJNszJ4bfhw3Kx",
+            "recDrVkv63Fv6gaQg",
+            "recWcn2iyXajwN941",
+            "recNSXpMMxuvcOUwF",
+            "recMbAJZOQ7pcmX2A",
+            "recVAz4S3QXSSWJXm",
+            "recH9TWWRRggoMs4A",
+            "recP0DQGkYlTl8gLd",
+            "recHFoztV8g1ybu7P",
+            "recb6TXwIQJvgInsl",
+            "recTbWD3HCru13u4b",
+            "rec2FFtmhniQBnQxV",
+            "recwucHo5p49IFEhb",
+            "recxgfQ1hHcRM17jF",
+            "recqewCN6n38ez9Tl",
+            "recDwSZVW8D69KHDa",
+            "recTPtJ1k6NiMdUQG",
+            "recsvUbhlMZOu8At7",
+            "recqu7TTWzfUKtyqn",
+            "recJNgEMw65peHPcN",
+            "rec1SQGoEcgYyuajF",
+            "recCxjzsJCXeQTzzr",
+            "recxxO50g6tyqukwj",
+            "recYDStdZm8m157Aa",
+            "rectDC3SVNvwtrIfg",
+            "recvcCvTKt1XtqPsj",
+            "recO5olTcttMuYfBi",
+            "rec2EA6dv3tpZr3dM",
+            "recTQfikKeL53OCld",
+            "rec7BiywMEJPSCU30",
+            "recnh8A2pBM7vmETS",
+            "recrdTWo8koGL5MGQ",
+            "recNkn7ulgTA9wksm",
+            "recRhtxlUWRvVktaf",
+            "recZamN2S593Dd3YH",
+            "recFuCJOCCM8SveXn",
+            "recl3TPuM8uJPf1vZ",
+            "recPEpoGOQU6uTwzw",
+            "recFD1jemY6UYSM3p",
+            "recY89MVVvQO0bJKC",
+            "rec2Chi9Vk8EDk9if",
+            "recxxi1Brk0KRiU13",
+            "recqAxY0lIA7k3qw2",
+            "recyrLD69jHqf1tps",
+            "rec0tLwLy9vS1vaZS",
+            "rec9UFm84WPPzjpuM",
+            "recwxmROK2GBXL73A",
+            "rechgh8SpZ4kR2dsQ",
+            "recC58NPBF8469z3N",
+            "recAe2MEtgKmhx8G6",
+            "recyLAF4YFpLSAbKv",
+            "rec2qdwYioVUtRQFY",
+            "recW7sxKMV0WXlT3A",
+            "recCGg4u7XMQghXD8",
+            "recRLpIK2Hlh2otH5",
+            "reci6Zkesyg3NDh3U",
+            "rectJvfYTCpA86eTE",
+            "rec7TKH8bAzh7zPdy",
+            "recLsu63FdGyFRpwe",
+            "recy9q1oy7wFhbbEs",
+            "recuSXRX8FDCIItZx",
+            "rec3HE7828fdJwcvG",
+            "rec7DeaUSD4gb3Z53",
+            "recJGmffPhHpwEQqU",
+            "rectWoii1yTeEhh80",
+            "recwmrmXaKWPT9WpV",
+            "recjae4OELdCuvre9",
+            "rec8hrvYoAg1Wu3qT"
+          ],
+          "First Time": true
+        }
+      }
+    ],
+    "Get Circle Profile": [
+      {
+        "json": {
+          "first_name": "Matt",
+          "last_name": "Walton",
+          "headline": "Product person",
+          "created_at": "2025-07-18T12:25:15.113Z",
+          "updated_at": "2025-07-24T08:43:02.186Z",
+          "community_id": 380195,
+          "last_seen_at": "2025-08-07T18:21:31.000Z",
+          "profile_confirmed_at": "2025-07-18T12:32:18.000Z",
+          "id": 42100364,
+          "profile_url": "https://inflection-by-zinc.circle.so/u/1b399c60",
+          "public_uid": "1b399c60",
+          "profile_fields": [
+            {
+              "id": 4280646,
+              "label": "Headline",
+              "field_type": "text",
+              "key": "headline",
+              "placeholder": "Add your headline",
+              "description": "Your headline",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.488Z",
+              "updated_at": "2025-07-18T11:11:38.488Z",
+              "community_member_profile_field": {
+                "id": 86067332,
+                "text": "Product person",
+                "textarea": null,
+                "created_at": "2025-07-18T12:32:17.884Z",
+                "updated_at": "2025-07-18T12:32:17.884Z",
+                "display_value": "Product person",
+                "community_member_choices": [],
+                "location_connections": []
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198461,
+                  "name": "community_view",
+                  "position": 1,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.492Z",
+                  "updated_at": "2025-07-18T11:11:38.492Z"
+                },
+                {
+                  "id": 13198459,
+                  "name": "edit_profile",
+                  "position": 1,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.490Z",
+                  "updated_at": "2025-07-18T11:11:38.490Z"
+                },
+                {
+                  "id": 13198460,
+                  "name": "profile_view",
+                  "position": 1,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.491Z",
+                  "updated_at": "2025-07-18T11:11:38.491Z"
+                },
+                {
+                  "id": 13198458,
+                  "name": "signup",
+                  "position": 1,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.489Z",
+                  "updated_at": "2025-07-18T11:11:38.489Z"
+                }
+              ]
+            },
+            {
+              "id": 4280647,
+              "label": "Bio",
+              "field_type": "textarea",
+              "key": "bio",
+              "placeholder": "Tell us a bit about yourself",
+              "description": "A short bio about yourself",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.496Z",
+              "updated_at": "2025-07-18T11:11:38.496Z",
+              "community_member_profile_field": {
+                "id": 86067333,
+                "text": null,
+                "textarea": "Me",
+                "created_at": "2025-07-18T12:32:17.902Z",
+                "updated_at": "2025-07-18T12:32:17.902Z",
+                "display_value": "Me",
+                "community_member_choices": [],
+                "location_connections": []
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198463,
+                  "name": "edit_profile",
+                  "position": 2,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.498Z",
+                  "updated_at": "2025-07-18T11:11:38.498Z"
+                },
+                {
+                  "id": 13198464,
+                  "name": "profile_view",
+                  "position": 2,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.498Z",
+                  "updated_at": "2025-07-18T11:11:38.498Z"
+                },
+                {
+                  "id": 13198462,
+                  "name": "signup",
+                  "position": 2,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.497Z",
+                  "updated_at": "2025-07-18T11:11:38.497Z"
+                }
+              ]
+            },
+            {
+              "id": 4280648,
+              "label": "Location",
+              "field_type": "location",
+              "key": "location",
+              "placeholder": "Add your location",
+              "description": "Your location",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.503Z",
+              "updated_at": "2025-07-18T11:11:38.503Z",
+              "community_member_profile_field": {
+                "id": 86067334,
+                "text": "London, Greater London, England, United Kingdom",
+                "textarea": null,
+                "created_at": "2025-07-18T12:32:17.917Z",
+                "updated_at": "2025-07-18T12:32:17.917Z",
+                "display_value": "London, Greater London, England, United Kingdom",
+                "community_member_choices": [],
+                "location_connections": [
+                  {
+                    "id": 12982594,
+                    "set_by_platform": false,
+                    "location_entity": {
+                      "id": 18,
+                      "entity_type": "country",
+                      "source": "mapbox_v6",
+                      "source_id": "dXJuOm1ieHBsYzpJazg",
+                      "name": "United Kingdom",
+                      "name_preferred": null,
+                      "language": "en"
+                    }
+                  },
+                  {
+                    "id": 12982595,
+                    "set_by_platform": false,
+                    "location_entity": {
+                      "id": 46,
+                      "entity_type": "region",
+                      "source": "mapbox_v6",
+                      "source_id": "dXJuOm1ieHBsYzpKRTg",
+                      "name": "England",
+                      "name_preferred": null,
+                      "language": "en"
+                    }
+                  },
+                  {
+                    "id": 12982596,
+                    "set_by_platform": false,
+                    "location_entity": {
+                      "id": 45,
+                      "entity_type": "district",
+                      "source": "mapbox_v6",
+                      "source_id": "dXJuOm1ieHBsYzpDUVpQ",
+                      "name": "Greater London",
+                      "name_preferred": null,
+                      "language": "en"
+                    }
+                  },
+                  {
+                    "id": 12982597,
+                    "set_by_platform": false,
+                    "location_entity": {
+                      "id": 47,
+                      "entity_type": "place",
+                      "source": "mapbox_v6",
+                      "source_id": "dXJuOm1ieHBsYzphaWhQ",
+                      "name": "London",
+                      "name_preferred": null,
+                      "language": "en"
+                    }
+                  }
+                ]
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198466,
+                  "name": "edit_profile",
+                  "position": 3,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.505Z",
+                  "updated_at": "2025-07-18T11:11:38.505Z"
+                },
+                {
+                  "id": 13198467,
+                  "name": "profile_view",
+                  "position": 3,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.505Z",
+                  "updated_at": "2025-07-18T11:11:38.505Z"
+                },
+                {
+                  "id": 13198465,
+                  "name": "signup",
+                  "position": 3,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.504Z",
+                  "updated_at": "2025-07-18T11:11:38.504Z"
+                }
+              ]
+            },
+            {
+              "id": 4280649,
+              "label": "Website",
+              "field_type": "link",
+              "key": "website",
+              "placeholder": "Add your website",
+              "description": "Your website URL",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.510Z",
+              "updated_at": "2025-07-18T11:11:38.510Z",
+              "community_member_profile_field": {
+                "id": 86067335,
+                "text": "https://mattwalton.co.uk",
+                "textarea": null,
+                "created_at": "2025-07-18T12:32:17.936Z",
+                "updated_at": "2025-07-18T12:32:17.936Z",
+                "display_value": "https://mattwalton.co.uk",
+                "community_member_choices": [],
+                "location_connections": []
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198469,
+                  "name": "edit_profile",
+                  "position": 4,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.511Z",
+                  "updated_at": "2025-07-18T11:11:38.511Z"
+                },
+                {
+                  "id": 13198470,
+                  "name": "profile_view",
+                  "position": 4,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.512Z",
+                  "updated_at": "2025-07-18T11:11:38.512Z"
+                },
+                {
+                  "id": 13198468,
+                  "name": "signup",
+                  "position": 4,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.511Z",
+                  "updated_at": "2025-07-18T11:11:38.511Z"
+                }
+              ]
+            },
+            {
+              "id": 4280650,
+              "label": "Twitter URL",
+              "field_type": "link",
+              "key": "twitter_url",
+              "placeholder": "Add your Twitter URL",
+              "description": "Your Twitter URL",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.517Z",
+              "updated_at": "2025-07-18T11:11:38.517Z",
+              "community_member_profile_field": {
+                "id": 86067336,
+                "text": "",
+                "textarea": null,
+                "created_at": "2025-07-18T12:32:17.972Z",
+                "updated_at": "2025-07-18T12:32:17.972Z",
+                "display_value": "",
+                "community_member_choices": [],
+                "location_connections": []
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198472,
+                  "name": "edit_profile",
+                  "position": 5,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.518Z",
+                  "updated_at": "2025-07-18T11:11:38.518Z"
+                },
+                {
+                  "id": 13198473,
+                  "name": "profile_view",
+                  "position": 5,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.519Z",
+                  "updated_at": "2025-07-18T11:11:38.519Z"
+                },
+                {
+                  "id": 13198471,
+                  "name": "signup",
+                  "position": 5,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.517Z",
+                  "updated_at": "2025-07-18T11:11:38.517Z"
+                }
+              ]
+            },
+            {
+              "id": 4280653,
+              "label": "Linkedin URL",
+              "field_type": "link",
+              "key": "linkedin_url",
+              "placeholder": "Add your LinkedIn URL",
+              "description": "Your LinkedIn URL",
+              "required": false,
+              "platform_field": true,
+              "created_at": "2025-07-18T11:11:38.536Z",
+              "updated_at": "2025-07-18T11:11:38.536Z",
+              "community_member_profile_field": {
+                "id": 86067339,
+                "text": "https://www.linkedin.com/in/mattwalton/",
+                "textarea": null,
+                "created_at": "2025-07-18T12:32:18.032Z",
+                "updated_at": "2025-07-18T12:32:18.032Z",
+                "display_value": "https://www.linkedin.com/in/mattwalton/",
+                "community_member_choices": [],
+                "location_connections": []
+              },
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198481,
+                  "name": "edit_profile",
+                  "position": 8,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.538Z",
+                  "updated_at": "2025-07-18T11:11:38.538Z"
+                },
+                {
+                  "id": 13198482,
+                  "name": "profile_view",
+                  "position": 8,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.538Z",
+                  "updated_at": "2025-07-18T11:11:38.538Z"
+                },
+                {
+                  "id": 13198480,
+                  "name": "signup",
+                  "position": 8,
+                  "visible": true,
+                  "created_at": "2025-07-18T11:11:38.537Z",
+                  "updated_at": "2025-07-18T11:11:38.537Z"
+                }
+              ]
+            },
+            {
+              "id": 4280654,
+              "label": "Profession",
+              "field_type": "text",
+              "key": "profession",
+              "placeholder": "Add your profession",
+              "description": "Your profession",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-07-18T11:11:38.543Z",
+              "updated_at": "2025-07-18T11:11:38.543Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198484,
+                  "name": "edit_profile",
+                  "position": 9,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.544Z",
+                  "updated_at": "2025-07-18T11:11:38.544Z"
+                },
+                {
+                  "id": 13198485,
+                  "name": "profile_view",
+                  "position": 9,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.545Z",
+                  "updated_at": "2025-07-18T11:11:38.545Z"
+                },
+                {
+                  "id": 13198483,
+                  "name": "signup",
+                  "position": 9,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.544Z",
+                  "updated_at": "2025-07-18T11:11:38.544Z"
+                }
+              ]
+            },
+            {
+              "id": 4280655,
+              "label": "Birthday",
+              "field_type": "text",
+              "key": "birthday",
+              "placeholder": "Add your birthday",
+              "description": "Your birthday",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-07-18T11:11:38.550Z",
+              "updated_at": "2025-07-18T11:11:38.550Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198487,
+                  "name": "edit_profile",
+                  "position": 10,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.552Z",
+                  "updated_at": "2025-07-18T11:11:38.552Z"
+                },
+                {
+                  "id": 13198488,
+                  "name": "profile_view",
+                  "position": 10,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.553Z",
+                  "updated_at": "2025-07-18T11:11:38.553Z"
+                },
+                {
+                  "id": 13198486,
+                  "name": "signup",
+                  "position": 10,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.551Z",
+                  "updated_at": "2025-07-18T11:11:38.551Z"
+                }
+              ]
+            },
+            {
+              "id": 4280656,
+              "label": "Company",
+              "field_type": "text",
+              "key": "company",
+              "placeholder": "Add your company",
+              "description": "Your company",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-07-18T11:11:38.558Z",
+              "updated_at": "2025-07-18T11:11:38.558Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13198490,
+                  "name": "edit_profile",
+                  "position": 11,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.560Z",
+                  "updated_at": "2025-07-18T11:11:38.560Z"
+                },
+                {
+                  "id": 13198491,
+                  "name": "profile_view",
+                  "position": 11,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.560Z",
+                  "updated_at": "2025-07-18T11:11:38.560Z"
+                },
+                {
+                  "id": 13198489,
+                  "name": "signup",
+                  "position": 11,
+                  "visible": false,
+                  "created_at": "2025-07-18T11:11:38.559Z",
+                  "updated_at": "2025-07-18T11:11:38.559Z"
+                }
+              ]
+            },
+            {
+              "id": 4355462,
+              "label": "What you're good at",
+              "field_type": "textarea",
+              "key": "what_youre_good_at",
+              "placeholder": "",
+              "description": "From your Ikigai work.",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-08-01T14:59:41.815Z",
+              "updated_at": "2025-08-01T14:59:41.815Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13429663,
+                  "name": "edit_profile",
+                  "position": 9,
+                  "visible": true,
+                  "created_at": "2025-08-01T14:59:41.825Z",
+                  "updated_at": "2025-08-01T14:59:41.825Z"
+                },
+                {
+                  "id": 13429664,
+                  "name": "profile_view",
+                  "position": 9,
+                  "visible": true,
+                  "created_at": "2025-08-01T14:59:41.831Z",
+                  "updated_at": "2025-08-01T14:59:41.831Z"
+                },
+                {
+                  "id": 13429662,
+                  "name": "signup",
+                  "position": 9,
+                  "visible": true,
+                  "created_at": "2025-08-01T14:59:41.818Z",
+                  "updated_at": "2025-08-01T14:59:41.818Z"
+                }
+              ]
+            },
+            {
+              "id": 4355464,
+              "label": "What you can be paid for",
+              "field_type": "textarea",
+              "key": "what_you_can_be_paid_for",
+              "placeholder": "",
+              "description": "From your Ikigai work.",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-08-01T15:00:11.669Z",
+              "updated_at": "2025-08-01T15:00:11.669Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13429669,
+                  "name": "edit_profile",
+                  "position": 11,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:11.677Z",
+                  "updated_at": "2025-08-01T15:00:11.677Z"
+                },
+                {
+                  "id": 13429670,
+                  "name": "profile_view",
+                  "position": 11,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:11.682Z",
+                  "updated_at": "2025-08-01T15:00:11.682Z"
+                },
+                {
+                  "id": 13429668,
+                  "name": "signup",
+                  "position": 11,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:11.671Z",
+                  "updated_at": "2025-08-01T15:00:11.671Z"
+                }
+              ]
+            },
+            {
+              "id": 4355465,
+              "label": "What the world needs",
+              "field_type": "textarea",
+              "key": "what_the_world_needs",
+              "placeholder": "",
+              "description": "From your Ikigai work.",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-08-01T15:00:42.106Z",
+              "updated_at": "2025-08-01T15:00:42.106Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13429672,
+                  "name": "edit_profile",
+                  "position": 12,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:42.121Z",
+                  "updated_at": "2025-08-01T15:00:42.121Z"
+                },
+                {
+                  "id": 13429673,
+                  "name": "profile_view",
+                  "position": 12,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:42.131Z",
+                  "updated_at": "2025-08-01T15:00:42.131Z"
+                },
+                {
+                  "id": 13429671,
+                  "name": "signup",
+                  "position": 12,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:00:42.109Z",
+                  "updated_at": "2025-08-01T15:00:42.109Z"
+                }
+              ]
+            },
+            {
+              "id": 4355477,
+              "label": "What you love",
+              "field_type": "textarea",
+              "key": "what_you_love_",
+              "placeholder": "",
+              "description": "From your Ikigai work.",
+              "required": false,
+              "platform_field": false,
+              "created_at": "2025-08-01T15:02:45.763Z",
+              "updated_at": "2025-08-01T15:02:45.763Z",
+              "community_member_profile_field": null,
+              "number_options": null,
+              "choices": [],
+              "pages": [
+                {
+                  "id": 13429709,
+                  "name": "edit_profile",
+                  "position": 13,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:02:45.769Z",
+                  "updated_at": "2025-08-01T15:02:45.769Z"
+                },
+                {
+                  "id": 13429710,
+                  "name": "profile_view",
+                  "position": 13,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:02:45.772Z",
+                  "updated_at": "2025-08-01T15:02:45.772Z"
+                },
+                {
+                  "id": 13429708,
+                  "name": "signup",
+                  "position": 13,
+                  "visible": true,
+                  "created_at": "2025-08-01T15:02:45.764Z",
+                  "updated_at": "2025-08-01T15:02:45.764Z"
+                }
+              ]
+            }
+          ],
+          "flattened_profile_fields": {
+            "headline": "Product person",
+            "bio": "Me",
+            "location": "London, Greater London, England, United Kingdom",
+            "website": "https://mattwalton.co.uk",
+            "twitter_url": "",
+            "linkedin_url": "https://www.linkedin.com/in/mattwalton/",
+            "profession": null,
+            "birthday": null,
+            "company": null,
+            "what_youre_good_at": null,
+            "what_you_can_be_paid_for": null,
+            "what_the_world_needs": null,
+            "what_you_love_": null
+          },
+          "avatar_url": "https://app.circle.so/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCQkdPdVFVPSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--46a46f99d2c36e0e94d88fdf9ee74573430c3f51/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDRG9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hSeVpYTnBlbVZmZEc5ZmJHbHRhWFJiQjJrQ0xBRnBBaXdCT2dwellYWmxjbnNHT2dwemRISnBjRlE9IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--ef295ed08e817a599d692fd6d8761673d3ed547f/Profile%20pic.jpeg",
+          "user_id": 33084427,
+          "name": "Matt Walton",
+          "email": "matt.walton@zinc.vc",
+          "accepted_invitation": "2025-07-18 12:31:09 UTC",
+          "active": true,
+          "sso_provider_user_id": null,
+          "posts_count": 5,
+          "comments_count": 0,
+          "gamification_stats": null,
+          "member_tags": [
+            {
+              "name": "Inflection Team",
+              "id": 169766
+            }
+          ]
+        }
+      }
+    ],
+    "Get user record2": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Ikigai": [
+            "rechb6u3lbcSOn7KE"
+          ],
+          "Circle ID": 42735856,
+          "Energy Tracking": [
+            "recWEaJ19l1aU2td9",
+            "receSCBjtHtvbqWXm",
+            "recyMbJlgHkcLxJv5",
+            "recKmtNhRvE31igqM",
+            "recFF15K8TMRtQGxG",
+            "recdVtope0wOBG2lT",
+            "recN7F9gjueeSqIJv"
+          ],
+          "Messages": [
+            "recLxzlx7KGazCupT",
+            "recVgoWCxJcH5C9vd",
+            "recWZO0k7Sg5rZJT0",
+            "recWsPx7d8VeOP2bs",
+            "rec0rg8SWPFZN8Jm8",
+            "rec0xo50XuniFnPTn",
+            "recLInZJFtiMfnvDC",
+            "recDQg39vV26sopsq",
+            "recZIX9Z5YaV3HFZv",
+            "recWPbPGkUDeJmbog",
+            "recKQB6xMlnTJibAj",
+            "recInrAXKWW7WOGWs",
+            "recRAIL0mdGITbpz8",
+            "recb1KrLBAmzWw6Qp",
+            "reclGbZv5A3shgrSh",
+            "recbNQrbiZsncgzE8",
+            "rec0QnWZNWw6w3VvE",
+            "recw9I7HIW3THOlIb",
+            "rec8eoLoYCt6hIppr",
+            "recu98SPzK1See3lH",
+            "recvivPSNSGVTrRLj",
+            "recp57yhUdJ5JJh7O",
+            "recnIibBGeV3aqosg",
+            "recIX71xtsBGSCy6A",
+            "rectx9zsewRkKlFh8",
+            "recVemlc5NLDufSNx",
+            "recC3b1fTiGBjhFdh",
+            "rechSWjK0fxkYl8dM",
+            "rec0U95gKDFfbizlG",
+            "recTLa9oaa1xpkHMZ",
+            "recQt5uwF5jGZ5I7I",
+            "rec4JFt5Sbone4xnJ",
+            "rec1m3XJipj3Mhp0K",
+            "recV5SAZAJ9gdUpcN",
+            "rec5HyNwLihLjtXKK",
+            "recu4IRshufulwjuk",
+            "recJ9ahfKxfdb7Axm",
+            "rec4sKl65PB5zSTFs",
+            "recZS28CBVY8bs4PU",
+            "recwvBgO1A0HUtCfR",
+            "recjLTKEr8ijsB2pH",
+            "recwkRLxgOhBT46EJ",
+            "rec4Nz2KdFVSvOI1Q",
+            "recr1e21eQ9G79lTb",
+            "reciDT5btlTUFnSyw",
+            "recOERR8XnnzCjpqN",
+            "rec01R3RjRTaVuFrw",
+            "recWNtlAzIuCzZbPe",
+            "recloWn3Bp2tTpO7J",
+            "reczWslxbrHvYN8dg",
+            "recre0DyW1LyFdNKE",
+            "reciMEzlRcd3TBl8Y",
+            "recz2Pz2w5LPMb3tE",
+            "recRFFZktGiNTDRC7",
+            "recAASXdOherZj6Sc",
+            "recTf2eFwQXHTz3Pd",
+            "rec0kqPLfWNQFnCWL",
+            "recZPXNtC0RyFj6jC",
+            "recrqrJYtiX79D0R2",
+            "recCUcemgadPVUcQ7",
+            "reclmyrg2hJHYuBWY",
+            "recqw2bb3fIgkFAkg",
+            "rect5kCBDrODbkUdK",
+            "recpy5l81Zf8OQGp0",
+            "reczqKVFW6P4fJ6O5",
+            "recIA7IjqhHYukyTk",
+            "rec20mpt8q9nOWoyU",
+            "recY7LmFIJckT54X7",
+            "recrxJ5PmEKiJvJ9k",
+            "recZ8Ds3wJPOMy7E9",
+            "recf6h7F6XIvs6mIe",
+            "recu10iZvRakkJtDY",
+            "recJEV053lfRd3Y4B",
+            "rec4HcpBljP4qeYiD",
+            "recLRAgjuTpa66bSu",
+            "recJeKKTOeObKBcO1",
+            "rec68ijIHSYlq6tXi",
+            "recFNE7VokRhjyEHW",
+            "recksr6fNwGiwOWZ5",
+            "recnSNUav1HCqUZIJ",
+            "recY7S0koSdCgrJVG",
+            "recsbAEQFVkvl8WT9",
+            "rechZBYgKQQ6LUdyo",
+            "recUS6qeCUAZuXZR9",
+            "rechz20tMQngSPHjI",
+            "recJOJiyU0PPz3QUg",
+            "recwRvlFZsfD4eTDj",
+            "reckDASReTdeqhyvL",
+            "recZFjZfHNrWo7VRw",
+            "rec5PnmQTYH4JsYGv",
+            "recuCCPPrhmKDJjrQ",
+            "rectH9jBy7Cu9jLNU",
+            "recrE2SEW281Xf78s",
+            "rec2IFu0W9qHj0NiD",
+            "recibJBeDnzJNMM18",
+            "recT7dnsVNK7kyKGL",
+            "reckwFWERpsjpM7YO",
+            "rec1i3kpPT6TddTbf",
+            "recnb8S2aVYffDTw0",
+            "recohv8ll8WEObTbt",
+            "recpSJoNAjGSrsymL",
+            "recuuWKYZdX76bK1a",
+            "recq1IcsOG0YsYFxk",
+            "recqFvKKoS7myR6dF",
+            "recMrrElJ5yS7WCaH",
+            "recyUGuJaEjeABUTa",
+            "recpQxzjeMb7JBmVJ",
+            "rec3I5DvQBfPmneCP",
+            "recxD6xIl3OABov0R",
+            "recWX02JNN3jrRh4Z",
+            "recVc0heXbJH5tjXt",
+            "rec7As9bQQzEotqsT",
+            "recyqyiYVytTtPV7e",
+            "recXFWiBgI83vAMAi",
+            "recNgvlI1fY2DxmJq",
+            "recgpgNQsGjnart8J",
+            "recwhmpRakTuVP0LT",
+            "recKp4Ao3n0aw18e2",
+            "recXdVVCmhU1Y3i01",
+            "recOAADunRQiRhXza",
+            "recAHM7z1SykmJKHo",
+            "rec2wN8DPVit3qK0F",
+            "recpnKDReBblRHj6b",
+            "reccPpq1JolnKmKWF",
+            "recXKCPMoFg0M7uKB",
+            "recm8YBNqReZp46E7",
+            "recdwe6g1W3klLlmt",
+            "recQ3x4VqVwvwjDac",
+            "recr5lEwEHpELH6g8",
+            "reco9bhEncEMO6C84",
+            "recKomePAlHGrHeLq",
+            "recwhjRhgZhGCh8h7",
+            "recjlD0DNSDlMBe5W",
+            "recFSfLx26iAMWeo4",
+            "recB7vgQSfd1it3ez",
+            "recNdc3icDSQOiW0f",
+            "recoMjnVHWWjrV86R",
+            "recffQwC8imLIYuM0",
+            "recR27iOfx15flBwN",
+            "recCCTNKXqUWarptZ",
+            "recA62HBxgjEw5mUc",
+            "rec1tLGntac2XwnS8",
+            "rectjs1XQlzYOJi6F",
+            "recsOh2t4SpSEYjci",
+            "recoGRhSLbY4zKymA",
+            "recLGma18jaqYDSgo",
+            "recN7fRjH1kuyM7nY",
+            "recSmO2vDeQLpjriZ",
+            "rechrIpy27yFnSYdo",
+            "recxtfAYDhnSMt57c",
+            "recSzCu2I7Oo6TTy1",
+            "recVTCPl3skfEQtzh",
+            "recfqp1Du5oOn5RS0",
+            "recv8hwB9wEJpCZj2",
+            "recc317Ihh4fhc3je",
+            "recnZhqk0ZxkZFJtM",
+            "recyeWwxdmULcXsN4",
+            "recf3AX4ZSjkfwUaR",
+            "recUca0VVrJnO2ERw",
+            "receo25U7hO0lne5O",
+            "recl7IpDUaYSpD68Z",
+            "recmLl8Ygi6VzfEHE",
+            "reckgjsOSAwvqrnYm",
+            "recs9omET7XuOBsSP",
+            "rec2IJOpqsjHW8YuF",
+            "recKPUxK1q64Ekjpk",
+            "rec7dhqPH9hjcRmGD",
+            "rec79M1J3amW9iNek",
+            "recVJNszJ4bfhw3Kx",
+            "recDrVkv63Fv6gaQg",
+            "recWcn2iyXajwN941",
+            "recNSXpMMxuvcOUwF",
+            "recMbAJZOQ7pcmX2A",
+            "recVAz4S3QXSSWJXm",
+            "recH9TWWRRggoMs4A",
+            "recP0DQGkYlTl8gLd",
+            "recHFoztV8g1ybu7P",
+            "recb6TXwIQJvgInsl",
+            "recTbWD3HCru13u4b",
+            "rec2FFtmhniQBnQxV",
+            "recwucHo5p49IFEhb",
+            "recxgfQ1hHcRM17jF",
+            "recqewCN6n38ez9Tl",
+            "recDwSZVW8D69KHDa",
+            "recTPtJ1k6NiMdUQG",
+            "recsvUbhlMZOu8At7",
+            "recqu7TTWzfUKtyqn",
+            "recJNgEMw65peHPcN",
+            "rec1SQGoEcgYyuajF",
+            "recCxjzsJCXeQTzzr",
+            "recxxO50g6tyqukwj",
+            "recYDStdZm8m157Aa",
+            "rectDC3SVNvwtrIfg",
+            "recvcCvTKt1XtqPsj",
+            "recO5olTcttMuYfBi",
+            "rec2EA6dv3tpZr3dM",
+            "recTQfikKeL53OCld",
+            "rec7BiywMEJPSCU30",
+            "recnh8A2pBM7vmETS",
+            "recrdTWo8koGL5MGQ",
+            "recNkn7ulgTA9wksm",
+            "recRhtxlUWRvVktaf",
+            "recZamN2S593Dd3YH",
+            "recFuCJOCCM8SveXn",
+            "recl3TPuM8uJPf1vZ",
+            "recPEpoGOQU6uTwzw",
+            "recFD1jemY6UYSM3p",
+            "recY89MVVvQO0bJKC",
+            "rec2Chi9Vk8EDk9if",
+            "recxxi1Brk0KRiU13",
+            "recqAxY0lIA7k3qw2",
+            "recyrLD69jHqf1tps",
+            "rec0tLwLy9vS1vaZS",
+            "rec9UFm84WPPzjpuM",
+            "recwxmROK2GBXL73A",
+            "rechgh8SpZ4kR2dsQ",
+            "recC58NPBF8469z3N",
+            "recAe2MEtgKmhx8G6",
+            "recyLAF4YFpLSAbKv",
+            "rec2qdwYioVUtRQFY",
+            "recW7sxKMV0WXlT3A",
+            "recCGg4u7XMQghXD8",
+            "recRLpIK2Hlh2otH5",
+            "reci6Zkesyg3NDh3U",
+            "rectJvfYTCpA86eTE",
+            "rec7TKH8bAzh7zPdy",
+            "recLsu63FdGyFRpwe",
+            "recy9q1oy7wFhbbEs",
+            "recuSXRX8FDCIItZx",
+            "rec3HE7828fdJwcvG",
+            "rec7DeaUSD4gb3Z53",
+            "recJGmffPhHpwEQqU",
+            "rectWoii1yTeEhh80",
+            "recwmrmXaKWPT9WpV",
+            "recjae4OELdCuvre9",
+            "rec8hrvYoAg1Wu3qT"
+          ],
+          "First Time": true
+        }
+      }
+    ],
+    "Mark terms declined": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Circle ID": 42735856
+        }
+      }
+    ],
+    "When chat message received": [
+      {
+        "json": {
+          "action": "feedback",
+          "chatInput": "__FEEDBACK__",
+          "sessionId": "session-1756722012995",
+          "messageId": "53954024-3a6a-4f41-a0f8-231182a2184e_1756722009513_assistant",
+          "feedbackType": "thumbs_down",
+          "assistantMessage": "Thank you for sharing that activity. Running in the park is a great one to track. Let me ask you a few questions about this experience:\n\nHow did running in the park affect your energy level? You can respond with:\n+2 (Energised)\n+1 (Uplifted)\n0 (Neutral)\n-1 (Low)\n-2 (Drained)",
+          "metadata": {
+            "email": "peter@quantably.co",
+            "name": "Test User",
+            "source": "development",
+            "selectedOption": "energy",
+            "feedbackGivenAt": "2025-09-01T10:20:12.995Z"
+          }
+        }
+      }
+    ],
+    "Store User Feedback": [
+      {
+        "json": {
+          "id": "recJ6hyQ58EXzEUU9",
+          "createdTime": "2025-08-11T14:38:26.000Z",
+          "Name": "Peter",
+          "Email": "peter@quantably.co",
+          "Id": 7,
+          "Circle ID": 42735856
+        }
+      }
+    ],
+    "Execute Energy Workflow": [
+      {
+        "json": {
+          "output": "I'd be happy to help you with energy tracking! This will help you understand how different activities affect your energy levels and engagement throughout your day.\n\nLet's start by talking about your day. What are some of the meaningful activities you completed today? These could be work tasks, personal projects, exercise, social interactions, or anything else that took up a significant amount of your time or attention."
+        }
+      }
+    ]
+  },
+  "versionId": "b14164b1-eacb-44e0-8bb4-fcc7a41abd39",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-08-08T14:10:48.999Z",
+      "updatedAt": "2025-08-08T14:10:48.999Z",
+      "role": "workflow:owner",
+      "workflowId": "PulPh1UsiDPGx2U1",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
