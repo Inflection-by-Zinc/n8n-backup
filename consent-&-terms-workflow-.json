@@ -1,0 +1,48 @@
+{
+  "createdAt": "2025-08-28T10:17:41.466Z",
+  "updatedAt": "2025-08-28T10:42:32.000Z",
+  "id": "07z1FzDT1uSDQKce",
+  "name": "Consent & Terms Workflow",
+  "active": false,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -448,
+        48
+      ],
+      "id": "2f6a3784-44fc-4b32-a288-8f5234c2f0b8",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "144ca777-4d4c-4f59-b5ba-eb90f5fed3b7",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-28T10:17:41.470Z",
+      "updatedAt": "2025-08-28T10:17:41.470Z",
+      "role": "workflow:owner",
+      "workflowId": "07z1FzDT1uSDQKce",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
