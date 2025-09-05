@@ -1,0 +1,450 @@
+{
+  "createdAt": "2025-08-13T15:54:04.501Z",
+  "updatedAt": "2025-08-28T07:41:51.000Z",
+  "id": "uGzUdnemhE3id0tm",
+  "name": "Problem Statments",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are an expert at onboarding users into the Zinc Inflection programme. The goal of Inflection is to help mid-career professionals navigate career transtions and help them find meangingful work that fulfils them.\n\n## Instructions\n- You help users onboard by asking them the following series of questions\n- Always ask a single question at a time\n- If the response doesn't make sense, ask the user for clarification\n\n## Starting Point (1-10 scoring)\n1. On a scale of 1-10 respond to the statements below. The range is: 1 = no clarity & 10 = total clarity. \n- I am clear what I want my next career move to look like.\n- I am clear on what I'm good at.\n- I know what you I love doing.\n- I am clear on what I can be paid for that I'm good at doing.\n- I am clear on the impact I want to make in the world.\n\n## Single Choice Selection Questions\n2. How strong and relevant is your professional network for the career transition you want to make? (Choose one)\n- I have very few connections, and most are not relevant to where I want to go.\n- I have a small number of relevant connections, but it feels limited.\n- I know some people who could be helpful, but I would need to build more.\n- I have a good number of relevant connections and a supportive network.\n- I have a strong, broad network highly relevant to my transition goals.\n\n3. How confident do you feel about reaching out to your network for support, introductions, or advice? (Choose one)\n- I don’t feel comfortable reaching out to anyone right now.\n- I could reach out to a few people, but I would hesitate.\n- I feel somewhat confident but worry about imposing.\n- I feel comfortable reaching out to my network when needed.\n- I feel very confident activating my network to support my goals.\n\n## 🎯 Goal Setting Questions\n4. What would you ideally like to achieve in the next 6 weeks in your career inflection?\n5. What would you like to achieve in the next 6 months?\n\n## Saving results\nOnce you have asked all of the onboarding questions, ask the user if they're happy to save the results. If the user does not wish to make any modifications, then use the `SaveOnboardingToAirtable` tool to save their onboarding responses. The arguments to this tool are the following:\n\nREQUIRED FIELDS FOR TOOL:\n- career_clarity\n- skills_clarity\n- passion_clarity\n- market_value_clarity\n- impact_clarity\n- short_term_goals\n- medium_term_goals\n- network_strength\n- network_confidence\n\nPost save return a brief confirmation including the values saved. \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        128,
+        -16
+      ],
+      "id": "dc1f57c8-66d9-4f38-b08d-2ae2038ab0a1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 3.7"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "243dea8d-ee37-4cb6-97c5-9e5ade1948a5",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "34AUC6y4OCqBS3VL",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "0805969c-78b0-4038-8a9f-c57f825d7c65",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -128,
+        -16
+      ],
+      "id": "16eedc82-bf63-47e3-8d40-1bb5af01b47c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblTjrZ9R4Hjh2ZLr",
+          "mode": "list",
+          "cachedResultName": "Onboarding Assessment",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblTjrZ9R4Hjh2ZLr"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Career Direction Clarity": "={{ $fromAI('career_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
+            "Assessment Date": "={{ new Date().toISOString() }}",
+            "From AI App": "yes",
+            "Skills Clarity": "={{ $fromAI('skills_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
+            "Passion Clarity": "={{ $fromAI('passion_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
+            "Market Value Clarity": "={{ $fromAI('market_value_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
+            "Impact Clarity": "={{ $fromAI('impact_clarity', 'exactly one number: 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10') }}",
+            "Short-term Goals": "={{ $fromAI('short_term_goals', 'paragraph describing short-term goals, can span multiple lines') }}",
+            "Medium-term Goals": "={{ $fromAI('medium_term_goals', 'paragraph describing short-term goals, can span multiple lines') }}",
+            "Assessment Type": "Initial",
+            "Network Strength": "={{ $fromAI('network_strength', 'Select one: Very few connections, Small number of relevant connections, Some helpful people, Good number of relevant connections, Strong, broad network for transition') }}",
+            "Network Confidence": "={{ $fromAI(\n  'network_confidence',\n  'Return exactly one of these, with no extra text: Not comfortable reaching out; Could reach out to a few, with hesitation; Somewhat confident but worry about imposing; Comfortable reaching out when needed; Very confident activating my network'\n) }}\n",
+            "User": "={{ $json.airtableUser }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Career Direction Clarity",
+              "displayName": "Career Direction Clarity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Skills Clarity",
+              "displayName": "Skills Clarity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Passion Clarity",
+              "displayName": "Passion Clarity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Market Value Clarity",
+              "displayName": "Market Value Clarity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Impact Clarity",
+              "displayName": "Impact Clarity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Short-term Goals",
+              "displayName": "Short-term Goals",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Medium-term Goals",
+              "displayName": "Medium-term Goals",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assessment Date",
+              "displayName": "Assessment Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assessment Type",
+              "displayName": "Assessment Type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Initial",
+                  "value": "Initial"
+                },
+                {
+                  "name": "Follow-up",
+                  "value": "Follow-up"
+                },
+                {
+                  "name": "Quarterly Check-in",
+                  "value": "Quarterly Check-in"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Network Strength",
+              "displayName": "Network Strength",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Very few connections, mostly not relevant",
+                  "value": "Very few connections, mostly not relevant"
+                },
+                {
+                  "name": "Small number of relevant connections",
+                  "value": "Small number of relevant connections"
+                },
+                {
+                  "name": "Some helpful people, need to build more",
+                  "value": "Some helpful people, need to build more"
+                },
+                {
+                  "name": "Good number of relevant connections",
+                  "value": "Good number of relevant connections"
+                },
+                {
+                  "name": "Strong, broad network for transition",
+                  "value": "Strong, broad network for transition"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Network Confidence",
+              "displayName": "Network Confidence",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Not comfortable reaching out",
+                  "value": "Not comfortable reaching out"
+                },
+                {
+                  "name": "Could reach out to a few, with hesitation",
+                  "value": "Could reach out to a few, with hesitation"
+                },
+                {
+                  "name": "Somewhat confident but worry about imposing",
+                  "value": "Somewhat confident but worry about imposing"
+                },
+                {
+                  "name": "Comfortable reaching out when needed",
+                  "value": "Comfortable reaching out when needed"
+                },
+                {
+                  "name": "Very confident activating my network",
+                  "value": "Very confident activating my network"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Name (from User)",
+              "displayName": "Name (from User)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "From AI App",
+              "displayName": "From AI App",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "yes",
+                  "value": "yes"
+                },
+                {
+                  "name": "no",
+                  "value": "no"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "c570be47-ae7d-4c43-9c4e-e6455a4c6eae",
+      "name": "SaveOnboardingToAirtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SaveOnboardingToAirtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "sessionId": "638d8035-9fe5-4afa-926a-f64ec55d79d4",
+          "airtableUser": "recJ6hyQ58EXzEUU9",
+          "Completed Onboarding": "false",
+          "chatInput": "hello"
+        }
+      }
+    ]
+  },
+  "versionId": "b313e2e7-c728-4415-8592-f12aa6c27a44",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-13T15:54:04.506Z",
+      "updatedAt": "2025-08-13T15:54:04.506Z",
+      "role": "workflow:owner",
+      "workflowId": "uGzUdnemhE3id0tm",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
