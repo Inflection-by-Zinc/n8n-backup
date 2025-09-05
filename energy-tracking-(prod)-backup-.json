@@ -1,0 +1,510 @@
+{
+  "createdAt": "2025-08-28T13:24:15.917Z",
+  "updatedAt": "2025-08-28T13:24:21.000Z",
+  "id": "m5igjXuTmiloar4r",
+  "name": "Energy Tracking (prod) backup",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-7-sonnet-20250219",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 3.7"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        288
+      ],
+      "id": "7d6540a6-717a-46f6-a3c8-d6a69ca1d413",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "34AUC6y4OCqBS3VL",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        288
+      ],
+      "id": "b792eb5e-d796-494f-a42d-d1afc69cd096",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -272,
+        48
+      ],
+      "id": "6cbbf52e-973d-4181-82c2-62f3725419c8",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8yzqrOdQkHhAyI",
+          "mode": "list",
+          "cachedResultName": "Energy Tracking",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbl8yzqrOdQkHhAyI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "User": "={{ [$('When Executed by Another Workflow').item.json.airtableUser] }}",
+            "Activity": "={{ $fromAI('activity', 'One or two full sentences. Max 300 chars. No bullets/markdown.') }}",
+            "Date": "={{ new Date().toISOString() }}",
+            "Notes": "={{ $fromAI('notes', 'Any notes or context about why they felt this way. Any specific element of the activity that affected their energy level. Max 500 chars. No bullets/markdown.') }}",
+            "Energy Level": "={{ [$fromAI('energy_level', 'The ID of the record that corresponds to the energy tracking rating submitted by the user')] }}",
+            "Engagement/Flow": "={{ [$fromAI('engagement', 'The ID of the record that corresponds to the energy tracking rating submitted by the user')] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Activity",
+              "displayName": "Activity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Energy Level",
+              "displayName": "Energy Level",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Engagement/Flow",
+              "displayName": "Engagement/Flow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        928,
+        304
+      ],
+      "id": "dac4cc1c-f78d-4564-8c0d-bf769bbf7c38",
+      "name": "SaveEnergyTrackingToAirtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblunNoRfiN0VdkoU",
+          "mode": "list",
+          "cachedResultName": "Energy Level Lookup",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblunNoRfiN0VdkoU"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        48
+      ],
+      "id": "49c0c375-947c-492b-b0cb-43f6ab24e5f3",
+      "name": "Get Energy Level Lookup",
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblfJ05b8j8PRzua1",
+          "mode": "list",
+          "cachedResultName": "Engagement Level Lookup",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tblfJ05b8j8PRzua1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        176,
+        48
+      ],
+      "id": "0d6d8a36-3679-424e-ae0e-805ba5eac80f",
+      "name": "Get Engagement Level Lookup",
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "914f3fca-e401-478f-a7f4-4be06d75f968",
+              "name": "sessionId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        48
+      ],
+      "id": "7c64a9d8-5488-4742-873e-7f05c7573db9",
+      "name": "Add SessionId",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When Executed by Another Workflow').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are an expert at capturing energy tracking insights from users for their day and save the results to Airtable for later analysis.\n\n## Instructions\n- Start by asking the user about meaningful activities completed in their day (there may be one or more)\n- Once they've answered iterate through each and aim to illicit details that would allow you to complete the questions below\n- Ask clarifying questions one by one.\n- Allow user to respond with numbers for energy/engagement scores to make it easy/quick for them to track\n- Only supply the descriptions for the levels if the user asks\n- Do not share Airtable ids with the user, these are for you to help you save the right records\n- Lookup tables below are shown in the following format\n    score : short desc : airtable record id : long desc\n\n## Questions that form energy tracking submission\n1. What did you do today?\n- Describe the activity in a short, specific phrase  E.g. writing a proposal, managing logistics, walking dog\n\n2. How did this affect your energy? (the user MUST select one of these exact options)\n\n{{ $('Get Energy Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Energy Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\nThe id's in parentheses above are the linked airtable records that you should use to save to the 'Energy Level' and 'Engagement/Flow' fields.\n\n3. How engaged were you in this activity?\n\n{{ $('Get Engagement Level Lookup').all().map((item, index) => `- ${item.json.Score > 0 ? '+' : ''}${item.json.Score} : ${item.json['Engagement Level']} : ${item.json.id} : ${item.json.Description}`).join('\\n') }}\n\n4. Notes\n\nOptionally ask the user to give context on why did they rate the answers above? Was there a specific element or part of the exercise that caused this?\n\n## Saving results\nOnce you have captured the requisite inputs, use the `saveEnergyTrackingToAirtable` tool to persist energy tracking. Once saved, give the user confirmation that it's saved successfully. You will need to invoke this function once for each activity. It does not support batch savib"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        48
+      ],
+      "id": "04454fef-387a-417a-a9ce-bf436c2ed29f",
+      "name": "Energy Tracking Agent"
+    }
+  ],
+  "connections": {
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Energy Tracking Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Energy Tracking Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get Energy Level Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SaveEnergyTrackingToAirtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "Energy Tracking Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Energy Level Lookup": {
+      "main": [
+        [
+          {
+            "node": "Get Engagement Level Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Engagement Level Lookup": {
+      "main": [
+        [
+          {
+            "node": "Add SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add SessionId": {
+      "main": [
+        [
+          {
+            "node": "Energy Tracking Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "sessionId": "1e22421a-1c1d-403b-be98-db81c8ec19ce",
+          "airtableUser": "recJ6hyQ58EXzEUU9",
+          "airtableUserID": 7,
+          "Completed Onboarding": "false",
+          "chatInput": "I want help with Energy Tracking",
+          "circleId": 42735856
+        }
+      }
+    ],
+    "Get Energy Level Lookup": [
+      {
+        "json": {
+          "id": "recE40ePMK8sYXoiH",
+          "createdTime": "2025-08-20T12:52:50.000Z",
+          "Energy Level": "Energised",
+          "Score": 2,
+          "Description": "Highly energised and motivated. Activities that leave you feeling recharged and ready for more.",
+          "Icon": "🟦",
+          "Energy Tracking": [
+            "receSCBjtHtvbqWXm"
+          ]
+        }
+      },
+      {
+        "json": {
+          "id": "recERl0eK7X4X5RYo",
+          "createdTime": "2025-08-20T12:52:19.000Z",
+          "Energy Level": "Neutral",
+          "Score": 0,
+          "Description": "Neither energising nor draining. Activities that maintain your current energy levels.",
+          "Icon": "🟨"
+        }
+      },
+      {
+        "json": {
+          "id": "recXEXeaTpJmVP8JC",
+          "createdTime": "2025-08-20T12:52:35.000Z",
+          "Energy Level": "Uplifted",
+          "Score": 1,
+          "Description": "Somewhat energised. Activities that give you a mild boost of energy.",
+          "Icon": "🟩",
+          "Energy Tracking": [
+            "recWEaJ19l1aU2td9"
+          ]
+        }
+      },
+      {
+        "json": {
+          "id": "reccaubC65xhnrdD2",
+          "createdTime": "2025-08-20T12:52:13.000Z",
+          "Energy Level": "Low",
+          "Score": -1,
+          "Description": "Somewhat tired or drained. Activities that take more energy than they give back.",
+          "Icon": "🟧"
+        }
+      },
+      {
+        "json": {
+          "id": "recephc33YgDzyGSe",
+          "createdTime": "2025-08-20T12:52:05.000Z",
+          "Energy Level": "Drained",
+          "Score": -2,
+          "Description": "Completely exhausted and depleted. Activities that leave you with no energy to do anything else.",
+          "Icon": "🟥"
+        }
+      }
+    ],
+    "Get Engagement Level Lookup": [
+      {
+        "json": {
+          "id": "rec45j16uIoYyGpxG",
+          "createdTime": "2025-08-20T12:53:08.000Z",
+          "Engagement Level": "High",
+          "Score": 3,
+          "Description": "Deep engagement or flow state. Fully immersed, time seems to fly by, and external distractions fade away.",
+          "Icon": "🟣",
+          "Energy Tracking": [
+            "recWEaJ19l1aU2td9",
+            "receSCBjtHtvbqWXm"
+          ]
+        }
+      },
+      {
+        "json": {
+          "id": "recF6a2Pd9tO9Gq7H",
+          "createdTime": "2025-08-20T12:53:02.000Z",
+          "Engagement Level": "Medium",
+          "Score": 2,
+          "Description": "Moderate engagement. Interested and focused, but may occasionally lose concentration.",
+          "Icon": "🔵"
+        }
+      },
+      {
+        "json": {
+          "id": "recKWUuRENugrmpxd",
+          "createdTime": "2025-08-20T12:52:56.000Z",
+          "Engagement Level": "Low",
+          "Score": 1,
+          "Description": "Minimal engagement or interest. Easily distracted, bored, or disconnected from the activity.",
+          "Icon": "🟢"
+        }
+      }
+    ],
+    "Add SessionId": [
+      {
+        "json": {
+          "sessionId": "1e22421a-1c1d-403b-be98-db81c8ec19ce"
+        }
+      }
+    ]
+  },
+  "versionId": "c32a7fb5-3636-47d4-891a-8f90b39bad0e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-28T13:24:15.921Z",
+      "updatedAt": "2025-08-28T13:24:15.921Z",
+      "role": "workflow:owner",
+      "workflowId": "m5igjXuTmiloar4r",
+      "projectId": "7M5MjjX95kwsCbaT"
+    }
+  ],
+  "tags": []
+}
