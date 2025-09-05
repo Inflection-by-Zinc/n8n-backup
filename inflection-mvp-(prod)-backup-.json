@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-08-22T15:50:40.491Z",
-  "updatedAt": "2025-08-27T16:14:54.000Z",
-  "id": "9ogHYFh4VeLkPzRa",
+  "createdAt": "2025-08-27T16:14:39.926Z",
+  "updatedAt": "2025-08-28T13:23:46.000Z",
+  "id": "h7IHGn3uZ3q1zd7D",
   "name": "Inflection MVP (prod) backup",
   "active": false,
   "isArchived": true,
@@ -11,30 +11,18 @@
         "public": true,
         "options": {
           "responseMode": "responseNode"
-        }
+        },
+        "path": "58c01615-4d7e-4b3c-b554-423068b4e1a2"
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
-        -160
+        -544,
+        432
       ],
-      "id": "94859dcc-7375-4b28-8cb3-9e3f93c0639f",
+      "id": "aa439cb4-34d3-4367-be0f-5cacd6be9238",
       "name": "When chat message received",
-      "webhookId": "08cc316f-d72d-4f00-a6c6-eaf5e9813149"
-    },
-    {
-      "parameters": {
-        "jsCode": "  console.log('Full input:', JSON.stringify($input.all(), null, 2));\n\n  const inputData = $input.first().json;\n  console.log('Input data:', JSON.stringify(inputData, null, 2));\n\n  // Look for metadata in different possible locations\n  console.log('Checking for metadata...');\n  if (inputData.metadata) {\n      console.log('Found metadata:', JSON.stringify(inputData.metadata, null, 2));\n  }\n\n  return [{\n    json: {\n      message: inputData.chatInput || inputData.message,\n      session_id: inputData.sessionId,\n      action: inputData.action,\n      user_auth: inputData.metadata || null,\n      debug: 'Checking for metadata'\n    }\n  }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        224,
-        -160
-      ],
-      "id": "1698fd04-b0f2-4356-b673-f5b9d1900008",
-      "name": "Code"
+      "webhookId": "58c01615-4d7e-4b3c-b554-423068b4e1a2"
     },
     {
       "parameters": {
@@ -78,10 +66,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        448,
-        -160
+        -96,
+        432
       ],
-      "id": "ea895944-fa0b-4171-9150-cd239a922c78",
+      "id": "61cceb37-e693-42fb-8b7d-3c74c5efd32a",
       "name": "Check email exists in circle community",
       "credentials": {
         "httpBearerAuth": {
@@ -139,10 +127,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        672,
-        -160
+        128,
+        432
       ],
-      "id": "ad7809d5-0436-4368-9f76-808abb438cc7",
+      "id": "e2df920e-d368-4fb8-af67-195e28522e91",
       "name": "If user found in circle"
     },
     {
@@ -155,10 +143,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        896,
-        -256
+        352,
+        336
       ],
-      "id": "0dff5d15-1676-4eb4-9b67-eee3323332f8",
+      "id": "77841646-9d24-499a-a47f-7d26fe1436d4",
       "name": "Get User's Profile",
       "credentials": {
         "httpBearerAuth": {
@@ -185,10 +173,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        896,
-        -64
+        352,
+        528
       ],
-      "id": "24393b51-db17-4b6c-aadd-f64d22d827c2",
+      "id": "b9857a56-2b08-4b39-8271-740ae02804d3",
       "name": "Tell user they're not authenticated and block chat"
     },
     {
@@ -229,16 +217,16 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1120,
-        -256
+        576,
+        336
       ],
-      "id": "7018918f-bd99-4ec3-9448-8dc3348df1b9",
+      "id": "1ae540c7-0624-4a37-8e5a-bd5411c0d64a",
       "name": "If __INIT__ method"
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "=[{\n    \"output\": \"Hi {{ $('Get User\\'s Profile').item.json.name }}! 👋 Welcome to Inflection. How can I help you today? (I am still under construction so I'll be able to do more things soon). For now though I can help you with completing your Ikigai assessment.\"\n}]",
+        "responseBody": "=[{\n    \"output\": \"Hi {{ $('Get User\\'s Profile').item.json.name }}! 👋 Welcome back to your ikigai journey. I'm here to help you discover your purpose. Would you like to continue your assessment or explore your previous insights?\"\n}]",
         "options": {
           "responseHeaders": {
             "entries": [
@@ -253,54 +241,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2256,
-        -400
+        1472,
+        240
       ],
-      "id": "38e93523-047d-4f80-a7a2-ca6ecda0f1e1",
+      "id": "23f39ee6-8715-4e0b-a3a2-5d1ee6e29c24",
       "name": "Send personalised welcome"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "claude-3-5-sonnet-20241022",
-          "mode": "list",
-          "cachedResultName": "Claude Sonnet 3.5 (New)"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
-      "typeVersion": 1.3,
-      "position": [
-        1792,
-        192
-      ],
-      "id": "10ae4472-2141-4e9a-8f7d-8c86181309c2",
-      "name": "Anthropic Chat Model",
-      "credentials": {
-        "anthropicApi": {
-          "id": "34AUC6y4OCqBS3VL",
-          "name": "Anthropic account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('When chat message received').item.json.chatInput }}",
-        "options": {
-          "systemMessage": "=## Role & Objective\nYou are an expert at the Japansese concept of Ikigai. You objective is to help guide mid-career professionals understand possible future career transitions open to them. As a starting point for this you aim to uncover meaningful and well thought out Ikigai assessments that can serve as foundational material for learning about possible transition points.\n\n## Instructions\n- Do NOT tell the user what their ikigai answers are. Rather to act as a guide in helping them discover it for themselves. You may be able to help abstract higher-level themes from their answers, that is welcome.\n- Help the user to provide honest, instinctive answers.\n\n## Ikigai Principles\nSome principles of Ikigai that you should always uphold: \n- It’s challenging. Your ikigai should lead to mastery and growth.\n- It’s their choice. You feel a certain degree of autonomy and freedom pursuing your ikigai.\n- It involves a commitment of time and belief, perhaps to a particular cause, skill, trade, or group of people.\n- It boosts their well-being. Ikigai is associated with positive relationships and good health. It gives you more energy than it takes away.\n\n## Stages of Ikigai\n1. *Start with: What you love:* What energises or excites them? What could they lose hours doing?\n2. *Then: What you're good at:* What do people often come to you for help with? What skills have you honed?\n3. *What the world needs:* What problems move you? What issues would you love to see solved?\n4. *What you can be paid for:* What roles, skills, or services have real market demand?\n\nAt each stage, it's expected to iterate back and fourth with the user until you are happy with their responses. This is part of helping them discover their Ikigai. When you ask follow up questions aimed at better understanding or getting more precise information try to limit the number of follow up questions to one at a time to not overwhelm them. Only when you happy with the answer to a particular ikigai section should you move onto the next.\n\nYou should strictly only answer questions related to Ikigai assessments and politely decline to answer anything else.\n\n## Context\nTo help provide a more personal experience, the users name is {{ $('Get User\\'s Profile').item.json.first_name }}.\n\n## Saving results\nIf at any point the user ask to save their ikigai (even if partially complete) then use the `SaveIkigaiToAirtable` tool. The arguments to this tool are the following:\n\nREQUIRED FIELDS (strings):\n- ikigai_love\n- ikigai_good_at\n- ikigai_world_needs\n- ikigai_paid_for\n\nRemember to set 'Status' to 'in-progress' if the current assessment is not finished. Post save return a brief confirmation including the values saved. \n\nAfter you've completed the full ikigai assessment and are happy with the results, ask the user if they are happy to save the results for future safe-keeping. If they respond positively, then use the same `SaveIkigaiToAirtable` tool to store the results.\n\n## Posting back to Circle\nOnce an ikigai assessment is completed we encourage users to post back their completed ikigai to their Circle profile. You can do this automatically using the `` tool. The arguments to this tool are:\n\nREQUIRED FIELDS (strings):\n- ikigai_love\n- ikigai_good_at\n- ikigai_world_needs\n- ikigai_paid_for\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.1,
-      "position": [
-        1824,
-        -32
-      ],
-      "id": "3512f70a-6386-4d5b-b71c-e3b48a10fa02",
-      "name": "Ikigai Agent",
-      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -330,10 +275,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1568,
-        -400
+        1024,
+        240
       ],
-      "id": "8ffcbe07-5fa6-432d-8028-dcf36f2e555d",
+      "id": "48da96bf-f572-4dd8-aeae-636d11f5fd24",
       "name": "If Airtable user record exists"
     },
     {
@@ -426,10 +371,10 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1920,
-        -336
+        1248,
+        320
       ],
-      "id": "dd9137e0-fd53-406c-b406-2ebe692b6239",
+      "id": "f5114e9b-3963-420e-a398-5133b9d912c7",
       "name": "Create User record",
       "credentials": {
         "airtableTokenApi": {
@@ -461,10 +406,10 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1344,
-        -400
+        800,
+        240
       ],
-      "id": "8a6e076e-0f9b-4bb9-9065-595bb1ff1207",
+      "id": "51e041a5-95a8-4a38-99f6-baea1b41fcb0",
       "name": "Search airtable user records",
       "alwaysOutputData": true,
       "credentials": {
@@ -476,30 +421,17 @@
     },
     {
       "parameters": {
-        "contextWindowLength": 25
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        1920,
-        256
-      ],
-      "id": "b4363c49-7695-40fd-9d1e-a5597dcabe70",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"sessionId\": \"{{ $('When chat message received').item.json.sessionId }}\",\n  \"airtableUser\": \"{{ $json.id }}\"\n}\n",
+        "jsonOutput": "={\n  \"sessionId\": \"{{ $('When chat message received').item.json.sessionId }}\",\n  \"airtableUser\": \"{{ $json.id }}\",\n  \"airtableUserID\": {{ $json.Id }},\n  \"Completed Onboarding\": \"{{ $json['Completed Onboarding'] || false }}\",\n  \"chatInput\": \"{{ $('Sanitise User Input').item.json.message }}\",\n  \"circleId\": {{ $json[\"Circle ID\"] }}\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1568,
-        -32
+        1024,
+        512
       ],
-      "id": "52d629b3-2a8b-4734-b0b8-899b780fe3cc",
+      "id": "3797c5b7-f8a1-4c98-97f1-b0773e0f5b38",
       "name": "Add sessionId"
     },
     {
@@ -525,11 +457,156 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        1344,
-        -32
+        800,
+        512
       ],
-      "id": "5fb5d110-2ba2-4c5b-8c13-c95046812681",
+      "id": "2799ae69-a0c7-4cad-801f-939240a9ba25",
       "name": "Get user record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "zPz0sGTSd3Ykl4lh",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3oVBjTmD0YIEU4CI",
+          "mode": "list",
+          "cachedResultName": "Inflection — Ikigai (prod)"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1248,
+        512
+      ],
+      "id": "1430db63-ce8d-495d-8728-42e4f915b6e7",
+      "name": "Execute Ikigai Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXOwco115Z6tDUm",
+          "mode": "list",
+          "cachedResultName": "Inflection - AI Co-Pilot",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbljTF6x0iBX59kDi",
+          "mode": "list",
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbljTF6x0iBX59kDi"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "conversation_id": "={{ $('Add sessionId').item.json.sessionId }}",
+            "content": "={{ $('Respond to User').item.json.output }}",
+            "ts": "={{ new Date().toISOString() }}",
+            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "role": "assistant"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "conversation_id",
+              "displayName": "conversation_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "user",
+                  "value": "user"
+                },
+                {
+                  "name": "assistant",
+                  "value": "assistant"
+                },
+                {
+                  "name": "system",
+                  "value": "system"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1920,
+        512
+      ],
+      "id": "2cfad891-c7da-4db9-991e-0693bfd06f5a",
+      "name": "Save Agent Output Trace",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
@@ -549,53 +626,36 @@
         },
         "table": {
           "__rl": true,
-          "value": "tbln2l6WR3RR5Ulbm",
+          "value": "tbljTF6x0iBX59kDi",
           "mode": "list",
-          "cachedResultName": "Ikigai",
-          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbln2l6WR3RR5Ulbm"
+          "cachedResultName": "Messages",
+          "cachedResultUrl": "https://airtable.com/appXOwco115Z6tDUm/tbljTF6x0iBX59kDi"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Completion Date": "={{ new Date().toISOString() }}",
-            "What you love": "={{ $fromAI('ikigai_love', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
-            "What you're good at": "={{ $fromAI('ikigai_good_at', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
-            "What the world needs": "={{ $fromAI('ikigai_world_needs', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
-            "What you can be paid for": "={{ $fromAI('ikigai_paid_for', 'Short phrase. Max 120 chars. No bullets/markdown.') }}",
-            "Status": "={{ $fromAI('status','exactly one of: incomplete, in-progress, completed') }}",
-            "What you can be paid for - Clarity": 0,
-            "What the world needs - Clarity": 0,
-            "What you're good at - Clarity": 0,
-            "What you love - Clarity": 0,
-            "User": "={{ $('Add sessionId').item.json.airtableUser }}"
+            "conversation_id": "={{ $('When chat message received').item.json.sessionId }}",
+            "content": "={{ $('When chat message received').item.json.chatInput }}",
+            "ts": "={{ new Date().toISOString() }}",
+            "User": "={{ [$('Add sessionId').item.json.airtableUser] }}",
+            "role": "user"
           },
           "matchingColumns": [],
           "schema": [
             {
-              "id": "ID",
-              "displayName": "ID",
+              "id": "conversation_id",
+              "displayName": "conversation_id",
               "required": false,
               "defaultMatch": false,
               "canBeUsedToMatch": true,
               "display": true,
               "type": "string",
-              "readOnly": true,
-              "removed": true
+              "readOnly": false,
+              "removed": false
             },
             {
-              "id": "User ID",
-              "displayName": "User ID",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": true,
-              "removed": true
-            },
-            {
-              "id": "Status",
-              "displayName": "Status",
+              "id": "role",
+              "displayName": "role",
               "required": false,
               "defaultMatch": false,
               "canBeUsedToMatch": true,
@@ -603,24 +663,35 @@
               "type": "options",
               "options": [
                 {
-                  "name": "completed",
-                  "value": "completed"
+                  "name": "user",
+                  "value": "user"
                 },
                 {
-                  "name": "in-progress",
-                  "value": "in-progress"
+                  "name": "assistant",
+                  "value": "assistant"
                 },
                 {
-                  "name": "incomplete",
-                  "value": "incomplete"
+                  "name": "system",
+                  "value": "system"
                 }
               ],
               "readOnly": false,
               "removed": false
             },
             {
-              "id": "Completion Date",
-              "displayName": "Completion Date",
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts",
+              "displayName": "ts",
               "required": false,
               "defaultMatch": false,
               "canBeUsedToMatch": true,
@@ -639,94 +710,6 @@
               "type": "array",
               "readOnly": false,
               "removed": false
-            },
-            {
-              "id": "What you love",
-              "displayName": "What you love",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What you love - Clarity",
-              "displayName": "What you love - Clarity",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "number",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What you're good at",
-              "displayName": "What you're good at",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What you're good at - Clarity",
-              "displayName": "What you're good at - Clarity",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "number",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What the world needs",
-              "displayName": "What the world needs",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What the world needs - Clarity",
-              "displayName": "What the world needs - Clarity",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "number",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What you can be paid for",
-              "displayName": "What you can be paid for",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "string",
-              "readOnly": false,
-              "removed": false
-            },
-            {
-              "id": "What you can be paid for - Clarity",
-              "displayName": "What you can be paid for - Clarity",
-              "required": false,
-              "defaultMatch": false,
-              "canBeUsedToMatch": true,
-              "display": true,
-              "type": "number",
-              "readOnly": false,
-              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -734,70 +717,20 @@
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.airtableTool",
+      "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.1,
       "position": [
-        2048,
-        192
+        1696,
+        512
       ],
-      "id": "7f6e8cc0-d919-4e9e-b90e-34536841ff5e",
-      "name": "SaveIkigaiToAirtable",
+      "id": "ecf499b6-9db0-4841-bbc9-a5ce78e40403",
+      "name": "Save User Input Trace",
       "credentials": {
         "airtableTokenApi": {
           "id": "zPz0sGTSd3Ykl4lh",
           "name": "Airtable Personal Access Token account"
         }
       }
-    },
-    {
-      "parameters": {
-        "method": "PATCH",
-        "url": "=https://app.circle.so/api/admin/v2/community_members/{{ $('Get User\\'s Profile').item.json.id }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBearerAuth",
-        "sendQuery": true,
-        "specifyQuery": "json",
-        "jsonQuery": "={\n  \"community_member_profile_fields\": {\n    \"what_you_love_\": \"{{ $fromAI('what_you_love', 'text') }}\",\n    \"what_youre_good_at\": \"{{ $fromAI('what_youre_good_at', 'text') }}\",\n    \"what_the_world_needs\": \"{{ $fromAI('what_the_world_needs', 'text') }}\",\n    \"what_you_can_be_paid_for\": \"{{ $fromAI('what_you_can_be_paid_for', 'text') }}\"\n  }\n}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.2,
-      "position": [
-        2128,
-        320
-      ],
-      "id": "d051ef76-6e0f-487f-a023-c2626e01df33",
-      "name": "postIkigaiResultsToCircle",
-      "credentials": {
-        "httpBearerAuth": {
-          "id": "YnWAw0YhhXv0KJ5H",
-          "name": "Circle Admin API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "[{\n    \"output\": \"Hmm, it seems like something went wrong in that last message. Please try again or contact the Inflection team if the problem persists.\"\n}]",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.4,
-      "position": [
-        2304,
-        160
-      ],
-      "id": "9c3cb20a-9842-4930-81d1-0ac7623c2bd1",
-      "name": "Respond that something went wrong"
     },
     {
       "parameters": {
@@ -808,11 +741,24 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2256,
-        -32
+        1472,
+        512
       ],
-      "id": "9b0bf0df-61e5-4e2f-a968-6eb525475970",
+      "id": "ef88f94a-2f02-4fbc-9122-9ac327843c5b",
       "name": "Respond to User"
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('Full input:', JSON.stringify($input.all(), null, 2));\nconst inputData = $input.first().json;\nconsole.log('Input data:', JSON.stringify(inputData, null, 2));\n\n// Look for metadata in different possible locations\nconsole.log('Checking for metadata...');\nif (inputData.metadata) {\n  console.log('Found metadata:', JSON.stringify(inputData.metadata, null, 2));\n}\n\n// Sanitize chatInput - handle different input formats and escape special characters\nlet sanitizedMessage = '';\nif (inputData.chatInput) {\n  // Remove any control characters and sanitize\n  sanitizedMessage = inputData.chatInput\n    .toString()\n    .replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '') // Remove control characters\n    .replace(/\"/g, '\\\\\"')                          // Escape double quotes\n    .trim();\n} else if (inputData.message) {\n  // Handle alternate message field\n  sanitizedMessage = inputData.message\n    .toString()\n    .replace(/[\\u0000-\\u001F\\u007F-\\u009F]/g, '') \n    .replace(/\"/g, '\\\\\"')\n    .trim();\n}\n\nconsole.log('Sanitized message:', sanitizedMessage);\n\nreturn [{\n  json: {\n    message: sanitizedMessage,\n    session_id: inputData.sessionId,\n    action: inputData.action,\n    user_auth: inputData.metadata || null,\n    debug: 'Checking for metadata'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        432
+      ],
+      "id": "c950cc55-64f9-4c18-8922-ccb145cc3803",
+      "name": "Sanitise User Input"
     }
   ],
   "connections": {
@@ -820,18 +766,7 @@
       "main": [
         [
           {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Check email exists in circle community",
+            "node": "Sanitise User Input",
             "type": "main",
             "index": 0
           }
@@ -896,22 +831,6 @@
         ]
       ]
     },
-    "Send personalised welcome": {
-      "main": [
-        []
-      ]
-    },
-    "Anthropic Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Ikigai Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "If Airtable user record exists": {
       "main": [
         [
@@ -952,40 +871,11 @@
         ]
       ]
     },
-    "Ikigai Agent": {
-      "main": [
-        [
-          {
-            "node": "Respond to User",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Respond that something went wrong",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "Ikigai Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Add sessionId": {
       "main": [
         [
           {
-            "node": "Ikigai Agent",
+            "node": "Execute Ikigai Workflow",
             "type": "main",
             "index": 0
           }
@@ -1003,23 +893,45 @@
         ]
       ]
     },
-    "SaveIkigaiToAirtable": {
-      "ai_tool": [
+    "Execute Ikigai Workflow": {
+      "main": [
         [
           {
-            "node": "Ikigai Agent",
-            "type": "ai_tool",
+            "node": "Respond to User",
+            "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "postIkigaiResultsToCircle": {
-      "ai_tool": [
+    "Save User Input Trace": {
+      "main": [
         [
           {
-            "node": "Ikigai Agent",
-            "type": "ai_tool",
+            "node": "Save Agent Output Trace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to User": {
+      "main": [
+        [
+          {
+            "node": "Save User Input Trace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitise User Input": {
+      "main": [
+        [
+          {
+            "node": "Check email exists in circle community",
+            "type": "main",
             "index": 0
           }
         ]
@@ -1034,23 +946,6 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {
-    "Code": [
-      {
-        "json": {
-          "message": "hey",
-          "session_id": "d83e47f8-496d-45f3-8e91-a2335bd141c0",
-          "action": "sendMessage",
-          "user_auth": {
-            "circle_user_id": "dev-user-123",
-            "email": "matt.walton@zinc.vc",
-            "name": "Dev User",
-            "session_cookie": "0KMbVnHK+Ufq72f6T3W41h8+bbX+Co3gRJXJouMVm6Y0eYiPIE2jD0p6FYPDAc4UWL9LWUGRravTySxJ4EkIx0KQqeKOFTTtYmEG0O1nYivp4IDlCnXAWF5pydy3QzaQLziANtUGwcRMFHgHP5I9esLGccVoTmH2GNJr/AYYAFtYeKsgjvyLxVruIVsx+g2WxGbgPp/9t+HbyjTJwIHqTChvHgf7DQLP9TwNWWBpCm6UztS54gI6YYSnNhn/TEh/mc4BeVvgR7lAabNQHUEFjozkd7tGRvmXoqfhtCkjxIm9KUvnv/oGdoZBJFpGjrPGeEUvZqNDkvC4USw08nEnTXJIpJdUV9OrVxEvtthdUp/Ko6Y6oCJAIiu/vnCrbE4Bz1coQTegxKJvSEShlWl--oLTHJ7Fw83z346Y2--a5yWo6hzVZRjS40PFSB1Kg==",
-            "source": "development"
-          },
-          "debug": "Checking for metadata"
-        }
-      }
-    ],
     "Get User's Profile": [
       {
         "json": {
@@ -1761,10 +1656,12 @@
         }
       }
     ],
-    "Ikigai Agent": [
+    "Add sessionId": [
       {
         "json": {
-          "output": "Of course, Peter! I'd be happy to help guide you through your Ikigai assessment. This is a thoughtful process of self-discovery, and I'll help you explore each component carefully.\n\nLet's start with the first element: \"What you love\"\n\nCould you tell me about activities or types of work that energize you? Think about times when you've been so absorbed in something that you've lost track of time. What were you doing in those moments?\n\nRemember, there are no wrong answers here - just share what naturally comes to mind."
+          "sessionId": "5f0460f3-c38b-4853-92d2-24771a5a56e0",
+          "airtableUser": "recJ6hyQ58EXzEUU9",
+          "Completed Onboarding": "false"
         }
       }
     ],
@@ -1780,23 +1677,39 @@
         }
       }
     ],
-    "Add sessionId": [
+    "Respond to User": [
       {
         "json": {
-          "sessionId": "91a56292-8c69-46f6-9cfb-2d17f1609d65",
-          "airtableUser": "recJ6hyQ58EXzEUU9"
+          "output": "Hello! I'm here to help guide you through an Ikigai assessment, which can help uncover meaningful career directions aligned with your purpose. Ikigai is a Japanese concept that sits at the intersection of what you love, what you're good at, what the world needs, and what you can be paid for.\n\nWould you like to begin exploring your Ikigai? We'll start with the first component: \"What you love.\" \n\nSome questions to consider:\n- What activities energize you or make you lose track of time?\n- What topics or activities do you find yourself naturally drawn to?\n- What would you do even if you weren't paid for it?\n\nTake your time to reflect - there's no rush, and we can pause at any point if you need more time to think.\n\nWhat comes to mind when you think about what you truly love doing?"
+        }
+      }
+    ],
+    "Sanitise User Input": [
+      {
+        "json": {
+          "message": "hey",
+          "session_id": "d83e47f8-496d-45f3-8e91-a2335bd141c0",
+          "action": "sendMessage",
+          "user_auth": {
+            "circle_user_id": "dev-user-123",
+            "email": "matt.walton@zinc.vc",
+            "name": "Dev User",
+            "session_cookie": "0KMbVnHK+Ufq72f6T3W41h8+bbX+Co3gRJXJouMVm6Y0eYiPIE2jD0p6FYPDAc4UWL9LWUGRravTySxJ4EkIx0KQqeKOFTTtYmEG0O1nYivp4IDlCnXAWF5pydy3QzaQLziANtUGwcRMFHgHP5I9esLGccVoTmH2GNJr/AYYAFtYeKsgjvyLxVruIVsx+g2WxGbgPp/9t+HbyjTJwIHqTChvHgf7DQLP9TwNWWBpCm6UztS54gI6YYSnNhn/TEh/mc4BeVvgR7lAabNQHUEFjozkd7tGRvmXoqfhtCkjxIm9KUvnv/oGdoZBJFpGjrPGeEUvZqNDkvC4USw08nEnTXJIpJdUV9OrVxEvtthdUp/Ko6Y6oCJAIiu/vnCrbE4Bz1coQTegxKJvSEShlWl--oLTHJ7Fw83z346Y2--a5yWo6hzVZRjS40PFSB1Kg==",
+            "source": "development"
+          },
+          "debug": "Checking for metadata"
         }
       }
     ]
   },
-  "versionId": "16d22d41-fa86-43b3-bf7f-464e50d1e25d",
+  "versionId": "45618665-b7d6-41c4-8778-d08bcfc1484b",
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-08-22T15:50:40.496Z",
-      "updatedAt": "2025-08-22T15:50:40.496Z",
+      "createdAt": "2025-08-27T16:14:39.931Z",
+      "updatedAt": "2025-08-27T16:14:39.931Z",
       "role": "workflow:owner",
-      "workflowId": "9ogHYFh4VeLkPzRa",
+      "workflowId": "h7IHGn3uZ3q1zd7D",
       "projectId": "7M5MjjX95kwsCbaT"
     }
   ],
